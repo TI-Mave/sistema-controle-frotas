@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:apiplacas.com.br)",
+      "WebFetch(domain:apibrasil.com.br)",
+      "WebFetch(domain:programadorbrasil.com.br)"
+    ]
+  }
+}
