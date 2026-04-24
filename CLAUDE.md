@@ -1027,9 +1027,9 @@
                                 <option value="oleo">Óleo</option>
                                 <option value="manutencao">Manutenção</option>
                                 <option value="revisao">Revisão</option>
-                                <option value="abastecimento_oleo">Abastecimento + Óleo</option>
                                 <option value="balde_oleo">Balde de Óleo</option>
                                 <option value="troca_oleo_filtro">Troca de Óleo e Filtro</option>
+                                <option value="troca_pneu">Troca de Pneu</option>
                                 <option value="outro">Outro (personalizado)</option>
                             </select>
                         </div>
@@ -1111,9 +1111,9 @@
                     <option value="oleo">Óleo</option>
                     <option value="manutencao">Manutenção</option>
                     <option value="revisao">Revisão</option>
-                    <option value="abastecimento_oleo">Abastecimento + Óleo</option>
                     <option value="balde_oleo">Balde de Óleo</option>
                     <option value="troca_oleo_filtro">Troca Óleo e Filtro</option>
+                    <option value="troca_pneu">Troca de Pneu</option>
                     <option value="outro">Outro</option>
                 </select>
             </div>
@@ -1207,9 +1207,9 @@
                             <option value="oleo">Óleo</option>
                             <option value="manutencao">Manutenção</option>
                             <option value="revisao">Revisão</option>
-                            <option value="abastecimento_oleo">Abastecimento + Óleo</option>
                             <option value="balde_oleo">Balde de Óleo</option>
                             <option value="troca_oleo_filtro">Troca Óleo e Filtro</option>
+                            <option value="troca_pneu">Troca de Pneu</option>
                             <option value="outro">Outro</option>
                         </select>
                     </div>
@@ -2488,6 +2488,7 @@
         abastecimento_oleo: 'Abastecimento + Óleo',
         balde_oleo: 'Balde de Óleo',
         troca_oleo_filtro: 'Troca Óleo e Filtro',
+        troca_pneu: 'Troca de Pneu',
         outro: 'Outro'
     };
 
@@ -2505,6 +2506,7 @@
             abastecimento_oleo: 'badge-fuel',
             balde_oleo: 'badge-oil',
             troca_oleo_filtro: 'badge-oil',
+            troca_pneu: 'badge-maintenance',
             outro: 'badge-other'
         };
         return badges[type] || 'badge-other';
