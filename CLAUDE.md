@@ -1064,6 +1064,10 @@
                                     <option value="gnv">GNV</option>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label>KM/Litro <span id="fuelKmPerLiterStar" style="color:var(--danger)">*</span></label>
+                                <input type="text" id="fuelKmPerLiter" placeholder="Ex: 10,5" inputmode="decimal" oninput="maskKmPerLiter(this)">
+                            </div>
                         </div>
                     </div>
 
@@ -1533,6 +1537,20 @@
         const id = document.getElementById('expenseId').value;
         const type = document.getElementById('expenseType').value;
 
+        // Validação KM/Litro obrigatório para "Abastecimento"
+        const kmPerLiterRaw = document.getElementById('fuelKmPerLiter').value.replace(',', '.');
+        const kmPerLiter = parseFloat(kmPerLiterRaw);
+        if (type === 'abastecimento') {
+            if (!kmPerLiter || kmPerLiter <= 0) {
+                showToast('Informe o consumo (KM/Litro) para gastos de abastecimento', 'error');
+                document.getElementById('fuelKmPerLiter').focus();
+                return;
+            }
+            if (kmPerLiter < 1 || kmPerLiter > 50) {
+                showToast('Consumo fora da faixa usual (1–50 km/L). Verifique o valor — o gasto será salvo mesmo assim.', 'info');
+            }
+        }
+
         const expense = {
             vehicleId: document.getElementById('expenseVehicle').value,
             type: type,
@@ -1548,6 +1566,7 @@
             expense.fuelLiters = parseFloat(document.getElementById('fuelLiters').value.replace(',', '.')) || '';
             expense.fuelPricePerLiter = parseMoney(document.getElementById('fuelPricePerLiter').value);
             expense.fuelType = document.getElementById('fuelType').value;
+            expense.fuelKmPerLiter = kmPerLiter > 0 ? kmPerLiter : '';
         }
 
         // Upload de arquivos
@@ -1621,6 +1640,7 @@
             document.getElementById('fuelLiters').value = ex.fuelLiters ? parseFloat(ex.fuelLiters).toFixed(2).replace('.', ',') : '';
             document.getElementById('fuelPricePerLiter').value = ex.fuelPricePerLiter ? formatMoney(ex.fuelPricePerLiter) : '';
             document.getElementById('fuelType').value = ex.fuelType || '';
+            document.getElementById('fuelKmPerLiter').value = ex.fuelKmPerLiter ? parseFloat(ex.fuelKmPerLiter).toFixed(2).replace('.', ',').replace(/,00$/, '') : '';
         }
 
         document.getElementById('expenseFormTitle').textContent = 'Editar Gasto';
@@ -1652,6 +1672,7 @@
         document.getElementById('filePreview').innerHTML = '';
         pendingFiles = [];
         setDefaultDate();
+        onExpenseTypeChange();
     }
 
     // ================================================================
@@ -1662,6 +1683,19 @@
 
         document.getElementById('fuelFields').style.display =
             ['abastecimento', 'abastecimento_oleo'].includes(type) ? 'block' : 'none';
+
+        // KM/Litro obrigatório apenas para "Abastecimento"
+        const kmInput = document.getElementById('fuelKmPerLiter');
+        const kmStar = document.getElementById('fuelKmPerLiterStar');
+        if (kmInput) {
+            if (type === 'abastecimento') {
+                kmInput.setAttribute('required', '');
+                if (kmStar) kmStar.style.display = '';
+            } else {
+                kmInput.removeAttribute('required');
+                if (kmStar) kmStar.style.display = 'none';
+            }
+        }
     }
 
     // ================================================================
@@ -1816,7 +1850,11 @@
                     <td>${v ? escapeHtml(v.name) : '<em>Removido</em>'}</td>
                     <td><span class="badge ${getTypeBadge(e.type)}">${getTypeName(e)}</span></td>
                     <td><strong>R$ ${formatMoney(e.value)}</strong></td>
-                    <td>${e.km ? Number(e.km).toLocaleString('pt-BR') : '-'}</td>
+                    <td>${
+                        ['abastecimento', 'abastecimento_oleo'].includes(e.type) && e.fuelKmPerLiter
+                            ? `<span style="color:var(--primary);font-weight:600">${parseFloat(e.fuelKmPerLiter).toFixed(2).replace('.', ',')} km/L</span>`
+                            : (e.km ? Number(e.km).toLocaleString('pt-BR') : '-')
+                    }</td>
                     <td><span class="obs-text" title="${escapeHtml(e.obs || '')}">${escapeHtml(e.obs || '-')}</span></td>
                     <td>
                         <div class="actions-cell">
@@ -2364,6 +2402,7 @@
         if (e.fuelLiters) html += `<div><strong>Litros:</strong> ${e.fuelLiters}</div>`;
         if (e.fuelPricePerLiter) html += `<div><strong>Preço/Litro:</strong> R$ ${formatMoney(e.fuelPricePerLiter)}</div>`;
         if (e.fuelType) html += `<div><strong>Combustível:</strong> ${e.fuelType}</div>`;
+        if (e.fuelKmPerLiter) html += `<div><strong>Consumo:</strong> ${parseFloat(e.fuelKmPerLiter).toFixed(2).replace('.', ',')} km/L</div>`;
         if (e.maintenanceDesc) html += `<div><strong>Serviço:</strong> ${escapeHtml(e.maintenanceDesc)}</div>`;
         if (e.maintenanceProvider) html += `<div><strong>Oficina:</strong> ${escapeHtml(e.maintenanceProvider)}</div>`;
         if (e.customTypeName) html += `<div><strong>Tipo Personalizado:</strong> ${escapeHtml(e.customTypeName)}</div>`;
@@ -2478,6 +2517,17 @@
         if (v.length === 0) { input.value = ''; return; }
         v = (parseInt(v) / 100).toFixed(2);
         input.value = v.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    function maskKmPerLiter(input) {
+        let v = input.value.replace(/[^0-9,]/g, '');
+        const firstComma = v.indexOf(',');
+        if (firstComma !== -1) {
+            v = v.slice(0, firstComma + 1) + v.slice(firstComma + 1).replace(/,/g, '');
+        }
+        const parts = v.split(',');
+        if (parts[1] && parts[1].length > 2) parts[1] = parts[1].slice(0, 2);
+        input.value = parts.join(',');
     }
 
     const TYPE_NAMES = {
