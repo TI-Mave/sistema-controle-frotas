@@ -722,6 +722,105 @@
             border-radius: 4px;
             letter-spacing: 1px;
         }
+
+        /* ===== CATEGORY REPORT ===== */
+        .cat-report-period {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            padding: 10px 14px;
+            background: var(--primary-lightest);
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .cat-report-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+        }
+
+        .cat-report-bar-value {
+            min-width: 52px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .cat-report-bar-container {
+            flex: 1;
+            height: 8px;
+            background: var(--border-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .cat-report-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            body.printing-category {
+                background: white;
+            }
+
+            body.printing-category header,
+            body.printing-category nav,
+            body.printing-category .toolbar,
+            body.printing-category .toast-container,
+            body.printing-category .modal-overlay,
+            body.printing-category .no-print,
+            body.printing-category .page:not(#page-reports),
+            body.printing-category #page-reports > .card:not(.print-target) {
+                display: none !important;
+            }
+
+            body.printing-category main {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            body.printing-category .card.print-target {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            body.printing-category .card.print-target .form-grid {
+                display: none;
+            }
+
+            body.printing-category table {
+                font-size: 0.85rem;
+            }
+
+            body.printing-category thead th {
+                background: #FFE0B2 !important;
+                color: #BF360C !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            body.printing-category .badge,
+            body.printing-category .cat-report-period,
+            body.printing-category .cat-report-bar,
+            body.printing-category .cat-report-bar-container {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            @page {
+                margin: 1.5cm;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1081,6 +1180,53 @@
                             </thead>
                             <tbody id="reportBody"></tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Relatório de Gastos por Categoria -->
+            <div class="card print-target">
+                <div class="card-title">
+                    <span class="material-icons-outlined">pie_chart</span>
+                    Relatório de Gastos por Categoria
+                </div>
+                <div class="form-grid" style="margin-bottom: 16px;">
+                    <div class="form-group">
+                        <label>Data Inicial *</label>
+                        <input type="date" id="catReportStart">
+                    </div>
+                    <div class="form-group">
+                        <label>Data Final *</label>
+                        <input type="date" id="catReportEnd">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Gasto</label>
+                        <select id="catReportType">
+                            <option value="">Todos os tipos</option>
+                            <option value="abastecimento">Abastecimento</option>
+                            <option value="oleo">Óleo</option>
+                            <option value="manutencao">Manutenção</option>
+                            <option value="revisao">Revisão</option>
+                            <option value="abastecimento_oleo">Abastecimento + Óleo</option>
+                            <option value="balde_oleo">Balde de Óleo</option>
+                            <option value="troca_oleo_filtro">Troca Óleo e Filtro</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions no-print" style="margin-top: 0; margin-bottom: 16px; justify-content: flex-start;">
+                    <button type="button" class="btn btn-primary" onclick="renderCategoryReport()">
+                        <span class="material-icons-outlined" style="font-size:18px">search</span> Gerar Relatório
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="printCategoryReport()">
+                        <span class="material-icons-outlined" style="font-size:18px">print</span> Imprimir / Salvar PDF
+                    </button>
+                </div>
+                <div id="catReportContent">
+                    <div class="empty-state">
+                        <span class="material-icons-outlined">pie_chart</span>
+                        <p>Defina o período e clique em "Gerar Relatório"</p>
+                        <small>A data inicial e final são obrigatórias; o tipo é opcional</small>
                     </div>
                 </div>
             </div>
@@ -1803,6 +1949,127 @@
                 <td>R$ ${formatMoney(grandTotal)}</td>
             </tr>
         `;
+    }
+
+    // ================================================================
+    //  CATEGORY REPORT (Relatório de Gastos por Categoria)
+    // ================================================================
+    function renderCategoryReport() {
+        const container = document.getElementById('catReportContent');
+        const start = document.getElementById('catReportStart').value;
+        const end = document.getElementById('catReportEnd').value;
+        const typeFilter = document.getElementById('catReportType').value;
+
+        if (!start || !end) {
+            showToast('Preencha a data inicial e a data final.', 'error');
+            return;
+        }
+        if (end < start) {
+            showToast('A data final não pode ser menor que a data inicial.', 'error');
+            return;
+        }
+
+        const rows = expenses.filter(e =>
+            e.date && e.date >= start && e.date <= end &&
+            (!typeFilter || e.type === typeFilter)
+        );
+
+        const periodHtml = `
+            <div class="cat-report-period">
+                <span class="material-icons-outlined" style="font-size:18px">event</span>
+                <span>Período analisado: <strong>${formatDate(start)} a ${formatDate(end)}</strong></span>
+                ${typeFilter ? `<span>&nbsp;|&nbsp; Filtro: <strong>${escapeHtml(TYPE_NAMES[typeFilter] || typeFilter)}</strong></span>` : ''}
+            </div>
+        `;
+
+        if (rows.length === 0) {
+            container.innerHTML = periodHtml + `
+                <div class="empty-state">
+                    <span class="material-icons-outlined">search_off</span>
+                    <p>Nenhum gasto encontrado no período</p>
+                    <small>Tente ampliar o intervalo ou remover o filtro de tipo</small>
+                </div>
+            `;
+            return;
+        }
+
+        const grandTotal = rows.reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
+
+        const grouped = rows.reduce((acc, e) => {
+            const key = getTypeName(e);
+            if (!acc[key]) acc[key] = { count: 0, total: 0, type: e.type };
+            acc[key].count += 1;
+            acc[key].total += parseFloat(e.value) || 0;
+            return acc;
+        }, {});
+
+        const result = Object.entries(grouped).map(([name, g]) => ({
+            name,
+            count: g.count,
+            total: g.total,
+            avg: g.count > 0 ? g.total / g.count : 0,
+            pct: grandTotal > 0 ? (g.total / grandTotal) * 100 : 0,
+            badge: getTypeBadge(g.type)
+        })).sort((a, b) => b.total - a.total);
+
+        const bodyRows = result.map(r => `
+            <tr>
+                <td><span class="badge ${r.badge}">${escapeHtml(r.name)}</span></td>
+                <td>${r.count}</td>
+                <td><strong>R$ ${formatMoney(r.total)}</strong></td>
+                <td>R$ ${formatMoney(r.avg)}</td>
+                <td>
+                    <div class="cat-report-bar-wrap">
+                        <span class="cat-report-bar-value">${r.pct.toFixed(1).replace('.', ',')}%</span>
+                        <div class="cat-report-bar-container">
+                            <div class="cat-report-bar" style="width:${r.pct.toFixed(2)}%"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+
+        container.innerHTML = periodHtml + `
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Qtd. Lançamentos</th>
+                            <th>Total</th>
+                            <th>Média / Lançamento</th>
+                            <th>% do Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>${bodyRows}</tbody>
+                    <tfoot>
+                        <tr style="background: var(--primary-lightest); font-weight: 700;">
+                            <td>TOTAL GERAL</td>
+                            <td>${rows.length}</td>
+                            <td>R$ ${formatMoney(grandTotal)}</td>
+                            <td>R$ ${formatMoney(grandTotal / rows.length)}</td>
+                            <td>100,0%</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        `;
+    }
+
+    function printCategoryReport() {
+        const container = document.getElementById('catReportContent');
+        if (!container.querySelector('table')) {
+            showToast('Gere o relatório antes de imprimir.', 'error');
+            return;
+        }
+        document.body.classList.add('printing-category');
+        const cleanup = () => {
+            document.body.classList.remove('printing-category');
+            window.removeEventListener('afterprint', cleanup);
+        };
+        window.addEventListener('afterprint', cleanup);
+        window.print();
+        setTimeout(cleanup, 1500);
     }
 
     // ================================================================
