@@ -722,105 +722,6 @@
             border-radius: 4px;
             letter-spacing: 1px;
         }
-
-        /* ===== CATEGORY REPORT ===== */
-        .cat-report-period {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            padding: 10px 14px;
-            background: var(--primary-lightest);
-            border-radius: var(--radius-sm);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .cat-report-bar-wrap {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 140px;
-        }
-
-        .cat-report-bar-value {
-            min-width: 52px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .cat-report-bar-container {
-            flex: 1;
-            height: 8px;
-            background: var(--border-light);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .cat-report-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
-            border-radius: 4px;
-            transition: width 0.4s ease;
-        }
-
-        /* ===== PRINT ===== */
-        @media print {
-            body.printing-category {
-                background: white;
-            }
-
-            body.printing-category header,
-            body.printing-category nav,
-            body.printing-category .toolbar,
-            body.printing-category .toast-container,
-            body.printing-category .modal-overlay,
-            body.printing-category .no-print,
-            body.printing-category .page:not(#page-reports),
-            body.printing-category #page-reports > .card:not(.print-target) {
-                display: none !important;
-            }
-
-            body.printing-category main {
-                max-width: 100%;
-                padding: 0;
-            }
-
-            body.printing-category .card.print-target {
-                box-shadow: none;
-                border: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            body.printing-category .card.print-target .form-grid {
-                display: none;
-            }
-
-            body.printing-category table {
-                font-size: 0.85rem;
-            }
-
-            body.printing-category thead th {
-                background: #FFE0B2 !important;
-                color: #BF360C !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            body.printing-category .badge,
-            body.printing-category .cat-report-period,
-            body.printing-category .cat-report-bar,
-            body.printing-category .cat-report-bar-container {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            @page {
-                margin: 1.5cm;
-            }
-        }
     </style>
 </head>
 <body>
@@ -1015,9 +916,14 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Veículo *</label>
-                            <select id="expenseVehicle" required>
+                            <select id="expenseVehicle" required onchange="onExpenseVehicleChange()">
                                 <option value="">Selecione o veículo</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Quilometragem Atual (km) *</label>
+                            <input type="number" id="expenseKm" placeholder="Ex: 45230" min="1" step="1" required>
+                            <small id="expenseKmHelper" style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;display:block;min-height:1em;">&nbsp;</small>
                         </div>
                         <div class="form-group">
                             <label>Tipo de Gasto *</label>
@@ -1029,7 +935,6 @@
                                 <option value="revisao">Revisão</option>
                                 <option value="balde_oleo">Balde de Óleo</option>
                                 <option value="troca_oleo_filtro">Troca de Óleo e Filtro</option>
-                                <option value="troca_pneu">Troca de Pneu</option>
                                 <option value="outro">Outro (personalizado)</option>
                             </select>
                         </div>
@@ -1063,10 +968,6 @@
                                     <option value="diesel">Diesel</option>
                                     <option value="gnv">GNV</option>
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <label>KM/Litro <span id="fuelKmPerLiterStar" style="color:var(--danger)">*</span></label>
-                                <input type="text" id="fuelKmPerLiter" placeholder="Ex: 10,5" inputmode="decimal" oninput="maskKmPerLiter(this)">
                             </div>
                         </div>
                     </div>
@@ -1117,7 +1018,6 @@
                     <option value="revisao">Revisão</option>
                     <option value="balde_oleo">Balde de Óleo</option>
                     <option value="troca_oleo_filtro">Troca Óleo e Filtro</option>
-                    <option value="troca_pneu">Troca de Pneu</option>
                     <option value="outro">Outro</option>
                 </select>
             </div>
@@ -1184,53 +1084,6 @@
                             </thead>
                             <tbody id="reportBody"></tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Relatório de Gastos por Categoria -->
-            <div class="card print-target">
-                <div class="card-title">
-                    <span class="material-icons-outlined">pie_chart</span>
-                    Relatório de Gastos por Categoria
-                </div>
-                <div class="form-grid" style="margin-bottom: 16px;">
-                    <div class="form-group">
-                        <label>Data Inicial *</label>
-                        <input type="date" id="catReportStart">
-                    </div>
-                    <div class="form-group">
-                        <label>Data Final *</label>
-                        <input type="date" id="catReportEnd">
-                    </div>
-                    <div class="form-group">
-                        <label>Tipo de Gasto</label>
-                        <select id="catReportType">
-                            <option value="">Todos os tipos</option>
-                            <option value="abastecimento">Abastecimento</option>
-                            <option value="oleo">Óleo</option>
-                            <option value="manutencao">Manutenção</option>
-                            <option value="revisao">Revisão</option>
-                            <option value="balde_oleo">Balde de Óleo</option>
-                            <option value="troca_oleo_filtro">Troca Óleo e Filtro</option>
-                            <option value="troca_pneu">Troca de Pneu</option>
-                            <option value="outro">Outro</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-actions no-print" style="margin-top: 0; margin-bottom: 16px; justify-content: flex-start;">
-                    <button type="button" class="btn btn-primary" onclick="renderCategoryReport()">
-                        <span class="material-icons-outlined" style="font-size:18px">search</span> Gerar Relatório
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="printCategoryReport()">
-                        <span class="material-icons-outlined" style="font-size:18px">print</span> Imprimir / Salvar PDF
-                    </button>
-                </div>
-                <div id="catReportContent">
-                    <div class="empty-state">
-                        <span class="material-icons-outlined">pie_chart</span>
-                        <p>Defina o período e clique em "Gerar Relatório"</p>
-                        <small>A data inicial e final são obrigatórias; o tipo é opcional</small>
                     </div>
                 </div>
             </div>
@@ -1404,7 +1257,37 @@
             loadFromLocalStorage();
         }
 
+        await migrateAbastecimentoOleoExpenses();
+
         renderAll();
+    }
+
+    // Migração: converte registros legados do tipo "Abastecimento + Óleo"
+    // para "Abastecimento". Idempotente — não faz nada se não houver registros.
+    async function migrateAbastecimentoOleoExpenses() {
+        const legacy = expenses.filter(e => e.type === 'abastecimento_oleo');
+        if (legacy.length === 0) return;
+
+        console.log(`Migrando ${legacy.length} registro(s) "Abastecimento + Óleo" → "Abastecimento"...`);
+
+        if (firebaseConfigured) {
+            for (const e of legacy) {
+                try {
+                    await db.collection('expenses').doc(e.id).update({
+                        type: 'abastecimento',
+                        updatedAt: new Date().toISOString()
+                    });
+                    e.type = 'abastecimento';
+                } catch (err) {
+                    console.error('Falha ao migrar gasto', e.id, err);
+                }
+            }
+        } else {
+            legacy.forEach(e => { e.type = 'abastecimento'; });
+            saveToLocalStorage();
+        }
+
+        console.log('Migração concluída.');
     }
 
     // Fallback: LocalStorage (funciona sem Firebase configurado)
@@ -1536,37 +1419,35 @@
 
         const id = document.getElementById('expenseId').value;
         const type = document.getElementById('expenseType').value;
+        const vehicleId = document.getElementById('expenseVehicle').value;
+        const km = parseInt(document.getElementById('expenseKm').value, 10);
 
-        // Validação KM/Litro obrigatório para "Abastecimento"
-        const kmPerLiterRaw = document.getElementById('fuelKmPerLiter').value.replace(',', '.');
-        const kmPerLiter = parseFloat(kmPerLiterRaw);
-        if (type === 'abastecimento') {
-            if (!kmPerLiter || kmPerLiter <= 0) {
-                showToast('Informe o consumo (KM/Litro) para gastos de abastecimento', 'error');
-                document.getElementById('fuelKmPerLiter').focus();
-                return;
-            }
-            if (kmPerLiter < 1 || kmPerLiter > 50) {
-                showToast('Consumo fora da faixa usual (1–50 km/L). Verifique o valor — o gasto será salvo mesmo assim.', 'info');
-            }
+        if (!Number.isFinite(km) || km <= 0) {
+            showToast('Informe a quilometragem atual do veículo (valor positivo).', 'error');
+            return;
+        }
+
+        const lastKm = lastKmForVehicle(vehicleId, id || null);
+        if (lastKm !== null && km < lastKm) {
+            showToast(`A quilometragem informada (${km.toLocaleString('pt-BR')} km) é menor que a última registrada (${lastKm.toLocaleString('pt-BR')} km) para este veículo.`, 'error');
+            return;
         }
 
         const expense = {
-            vehicleId: document.getElementById('expenseVehicle').value,
+            vehicleId: vehicleId,
             type: type,
             date: document.getElementById('expenseDate').value,
             value: parseMoney(document.getElementById('expenseValue').value),
-            km: '',
+            km: km,
             obs: document.getElementById('expenseObs').value.trim(),
             updatedAt: new Date().toISOString()
         };
 
         // Campos de abastecimento
-        if (['abastecimento', 'abastecimento_oleo'].includes(type)) {
+        if (type === 'abastecimento') {
             expense.fuelLiters = parseFloat(document.getElementById('fuelLiters').value.replace(',', '.')) || '';
             expense.fuelPricePerLiter = parseMoney(document.getElementById('fuelPricePerLiter').value);
             expense.fuelType = document.getElementById('fuelType').value;
-            expense.fuelKmPerLiter = kmPerLiter > 0 ? kmPerLiter : '';
         }
 
         // Upload de arquivos
@@ -1632,15 +1513,16 @@
         document.getElementById('expenseType').value = ex.type;
         document.getElementById('expenseDate').value = ex.date;
         document.getElementById('expenseValue').value = formatMoney(ex.value);
+        document.getElementById('expenseKm').value = ex.km ? Number(ex.km) : '';
         document.getElementById('expenseObs').value = ex.obs || '';
 
         onExpenseTypeChange();
+        onExpenseVehicleChange();
 
-        if (['abastecimento', 'abastecimento_oleo'].includes(ex.type)) {
+        if (ex.type === 'abastecimento') {
             document.getElementById('fuelLiters').value = ex.fuelLiters ? parseFloat(ex.fuelLiters).toFixed(2).replace('.', ',') : '';
             document.getElementById('fuelPricePerLiter').value = ex.fuelPricePerLiter ? formatMoney(ex.fuelPricePerLiter) : '';
             document.getElementById('fuelType').value = ex.fuelType || '';
-            document.getElementById('fuelKmPerLiter').value = ex.fuelKmPerLiter ? parseFloat(ex.fuelKmPerLiter).toFixed(2).replace('.', ',').replace(/,00$/, '') : '';
         }
 
         document.getElementById('expenseFormTitle').textContent = 'Editar Gasto';
@@ -1670,9 +1552,9 @@
         document.getElementById('expenseFormTitle').textContent = 'Registrar Gasto';
         document.getElementById('fuelFields').style.display = 'none';
         document.getElementById('filePreview').innerHTML = '';
+        document.getElementById('expenseKmHelper').innerHTML = '&nbsp;';
         pendingFiles = [];
         setDefaultDate();
-        onExpenseTypeChange();
     }
 
     // ================================================================
@@ -1682,20 +1564,33 @@
         const type = document.getElementById('expenseType').value;
 
         document.getElementById('fuelFields').style.display =
-            ['abastecimento', 'abastecimento_oleo'].includes(type) ? 'block' : 'none';
+            type === 'abastecimento' ? 'block' : 'none';
+    }
 
-        // KM/Litro obrigatório apenas para "Abastecimento"
-        const kmInput = document.getElementById('fuelKmPerLiter');
-        const kmStar = document.getElementById('fuelKmPerLiterStar');
-        if (kmInput) {
-            if (type === 'abastecimento') {
-                kmInput.setAttribute('required', '');
-                if (kmStar) kmStar.style.display = '';
-            } else {
-                kmInput.removeAttribute('required');
-                if (kmStar) kmStar.style.display = 'none';
-            }
+    // ================================================================
+    //  KM HELPERS
+    // ================================================================
+    function lastKmForVehicle(vehicleId, excludeExpenseId) {
+        if (!vehicleId) return null;
+        const kms = expenses
+            .filter(e => e.vehicleId === vehicleId && (!excludeExpenseId || e.id !== excludeExpenseId))
+            .map(e => Number(e.km) || 0)
+            .filter(km => km > 0);
+        return kms.length ? Math.max(...kms) : null;
+    }
+
+    function onExpenseVehicleChange() {
+        const vehicleId = document.getElementById('expenseVehicle').value;
+        const editingId = document.getElementById('expenseId').value || null;
+        const helper = document.getElementById('expenseKmHelper');
+        if (!vehicleId) {
+            helper.innerHTML = '&nbsp;';
+            return;
         }
+        const lastKm = lastKmForVehicle(vehicleId, editingId);
+        helper.textContent = lastKm !== null
+            ? `Última KM registrada: ${lastKm.toLocaleString('pt-BR')} km`
+            : 'Sem registro anterior';
     }
 
     // ================================================================
@@ -1703,7 +1598,7 @@
     // ================================================================
     function calcLiters() {
         const type = document.getElementById('expenseType').value;
-        if (!['abastecimento', 'abastecimento_oleo'].includes(type)) return;
+        if (type !== 'abastecimento') return;
 
         const totalValue = parseMoney(document.getElementById('expenseValue').value);
         const pricePerLiter = parseMoney(document.getElementById('fuelPricePerLiter').value);
@@ -1850,11 +1745,7 @@
                     <td>${v ? escapeHtml(v.name) : '<em>Removido</em>'}</td>
                     <td><span class="badge ${getTypeBadge(e.type)}">${getTypeName(e)}</span></td>
                     <td><strong>R$ ${formatMoney(e.value)}</strong></td>
-                    <td>${
-                        ['abastecimento', 'abastecimento_oleo'].includes(e.type) && e.fuelKmPerLiter
-                            ? `<span style="color:var(--primary);font-weight:600">${parseFloat(e.fuelKmPerLiter).toFixed(2).replace('.', ',')} km/L</span>`
-                            : (e.km ? Number(e.km).toLocaleString('pt-BR') : '-')
-                    }</td>
+                    <td>${e.km ? Number(e.km).toLocaleString('pt-BR') : '-'}</td>
                     <td><span class="obs-text" title="${escapeHtml(e.obs || '')}">${escapeHtml(e.obs || '-')}</span></td>
                     <td>
                         <div class="actions-cell">
@@ -1877,7 +1768,7 @@
     function renderDashboard() {
         // Stats
         const totalVehicles = vehicles.length;
-        const fuelExpenses = expenses.filter(e => ['abastecimento', 'abastecimento_oleo'].includes(e.type));
+        const fuelExpenses = expenses.filter(e => e.type === 'abastecimento');
         const maintenanceExpenses = expenses.filter(e => !['abastecimento'].includes(e.type));
         const totalFuel = fuelExpenses.reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
         const totalMaint = expenses.filter(e => ['manutencao', 'revisao', 'troca_oleo_filtro', 'oleo', 'balde_oleo', 'outro'].includes(e.type)).reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
@@ -1949,6 +1840,27 @@
 
         const grandTotal = filtered.reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
 
+        // KM rodado: per veículo (max - min) das KMs registradas no período, somado entre veículos
+        const vehicleIdsInScope = vehicleId
+            ? [vehicleId]
+            : [...new Set(filtered.map(e => e.vehicleId))];
+        let totalKmDriven = 0;
+        let kmComputable = false;
+        vehicleIdsInScope.forEach(vId => {
+            const kms = filtered
+                .filter(e => e.vehicleId === vId)
+                .map(e => Number(e.km) || 0)
+                .filter(k => k > 0);
+            if (kms.length >= 2) {
+                totalKmDriven += Math.max(...kms) - Math.min(...kms);
+                kmComputable = true;
+            }
+        });
+        const kmLabel = vehicleId ? 'KM Rodado no Período' : 'Distância Total da Frota';
+        const kmValue = kmComputable
+            ? totalKmDriven.toLocaleString('pt-BR') + ' km'
+            : '—';
+
         // Stats cards
         document.getElementById('reportStats').innerHTML = `
             <div class="stat-card">
@@ -1963,6 +1875,13 @@
                 <div class="stat-info">
                     <h3>R$ ${formatMoney(grandTotal)}</h3>
                     <p>Valor Total</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon deep-orange"><span class="material-icons-outlined">route</span></div>
+                <div class="stat-info">
+                    <h3>${kmValue}</h3>
+                    <p>${kmLabel}</p>
                 </div>
             </div>
         `;
@@ -1987,127 +1906,6 @@
                 <td>R$ ${formatMoney(grandTotal)}</td>
             </tr>
         `;
-    }
-
-    // ================================================================
-    //  CATEGORY REPORT (Relatório de Gastos por Categoria)
-    // ================================================================
-    function renderCategoryReport() {
-        const container = document.getElementById('catReportContent');
-        const start = document.getElementById('catReportStart').value;
-        const end = document.getElementById('catReportEnd').value;
-        const typeFilter = document.getElementById('catReportType').value;
-
-        if (!start || !end) {
-            showToast('Preencha a data inicial e a data final.', 'error');
-            return;
-        }
-        if (end < start) {
-            showToast('A data final não pode ser menor que a data inicial.', 'error');
-            return;
-        }
-
-        const rows = expenses.filter(e =>
-            e.date && e.date >= start && e.date <= end &&
-            (!typeFilter || e.type === typeFilter)
-        );
-
-        const periodHtml = `
-            <div class="cat-report-period">
-                <span class="material-icons-outlined" style="font-size:18px">event</span>
-                <span>Período analisado: <strong>${formatDate(start)} a ${formatDate(end)}</strong></span>
-                ${typeFilter ? `<span>&nbsp;|&nbsp; Filtro: <strong>${escapeHtml(TYPE_NAMES[typeFilter] || typeFilter)}</strong></span>` : ''}
-            </div>
-        `;
-
-        if (rows.length === 0) {
-            container.innerHTML = periodHtml + `
-                <div class="empty-state">
-                    <span class="material-icons-outlined">search_off</span>
-                    <p>Nenhum gasto encontrado no período</p>
-                    <small>Tente ampliar o intervalo ou remover o filtro de tipo</small>
-                </div>
-            `;
-            return;
-        }
-
-        const grandTotal = rows.reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
-
-        const grouped = rows.reduce((acc, e) => {
-            const key = getTypeName(e);
-            if (!acc[key]) acc[key] = { count: 0, total: 0, type: e.type };
-            acc[key].count += 1;
-            acc[key].total += parseFloat(e.value) || 0;
-            return acc;
-        }, {});
-
-        const result = Object.entries(grouped).map(([name, g]) => ({
-            name,
-            count: g.count,
-            total: g.total,
-            avg: g.count > 0 ? g.total / g.count : 0,
-            pct: grandTotal > 0 ? (g.total / grandTotal) * 100 : 0,
-            badge: getTypeBadge(g.type)
-        })).sort((a, b) => b.total - a.total);
-
-        const bodyRows = result.map(r => `
-            <tr>
-                <td><span class="badge ${r.badge}">${escapeHtml(r.name)}</span></td>
-                <td>${r.count}</td>
-                <td><strong>R$ ${formatMoney(r.total)}</strong></td>
-                <td>R$ ${formatMoney(r.avg)}</td>
-                <td>
-                    <div class="cat-report-bar-wrap">
-                        <span class="cat-report-bar-value">${r.pct.toFixed(1).replace('.', ',')}%</span>
-                        <div class="cat-report-bar-container">
-                            <div class="cat-report-bar" style="width:${r.pct.toFixed(2)}%"></div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        `).join('');
-
-        container.innerHTML = periodHtml + `
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Categoria</th>
-                            <th>Qtd. Lançamentos</th>
-                            <th>Total</th>
-                            <th>Média / Lançamento</th>
-                            <th>% do Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>${bodyRows}</tbody>
-                    <tfoot>
-                        <tr style="background: var(--primary-lightest); font-weight: 700;">
-                            <td>TOTAL GERAL</td>
-                            <td>${rows.length}</td>
-                            <td>R$ ${formatMoney(grandTotal)}</td>
-                            <td>R$ ${formatMoney(grandTotal / rows.length)}</td>
-                            <td>100,0%</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        `;
-    }
-
-    function printCategoryReport() {
-        const container = document.getElementById('catReportContent');
-        if (!container.querySelector('table')) {
-            showToast('Gere o relatório antes de imprimir.', 'error');
-            return;
-        }
-        document.body.classList.add('printing-category');
-        const cleanup = () => {
-            document.body.classList.remove('printing-category');
-            window.removeEventListener('afterprint', cleanup);
-        };
-        window.addEventListener('afterprint', cleanup);
-        window.print();
-        setTimeout(cleanup, 1500);
     }
 
     // ================================================================
@@ -2302,7 +2100,7 @@
 
                 const monthFuelExps = expenses.filter(e =>
                     e.vehicleId === v.id &&
-                    ['abastecimento', 'abastecimento_oleo'].includes(e.type) &&
+                    e.type === 'abastecimento' &&
                     e.date >= monthStart && e.date <= monthEnd &&
                     e.fuelLiters && parseFloat(e.fuelLiters) > 0
                 );
@@ -2333,7 +2131,7 @@
 
             const periodFuelExps = expenses.filter(e =>
                 e.vehicleId === v.id &&
-                ['abastecimento', 'abastecimento_oleo'].includes(e.type) &&
+                e.type === 'abastecimento' &&
                 e.date >= periodStartDate && e.date <= periodEndDate &&
                 e.fuelLiters && parseFloat(e.fuelLiters) > 0
             );
@@ -2402,7 +2200,6 @@
         if (e.fuelLiters) html += `<div><strong>Litros:</strong> ${e.fuelLiters}</div>`;
         if (e.fuelPricePerLiter) html += `<div><strong>Preço/Litro:</strong> R$ ${formatMoney(e.fuelPricePerLiter)}</div>`;
         if (e.fuelType) html += `<div><strong>Combustível:</strong> ${e.fuelType}</div>`;
-        if (e.fuelKmPerLiter) html += `<div><strong>Consumo:</strong> ${parseFloat(e.fuelKmPerLiter).toFixed(2).replace('.', ',')} km/L</div>`;
         if (e.maintenanceDesc) html += `<div><strong>Serviço:</strong> ${escapeHtml(e.maintenanceDesc)}</div>`;
         if (e.maintenanceProvider) html += `<div><strong>Oficina:</strong> ${escapeHtml(e.maintenanceProvider)}</div>`;
         if (e.customTypeName) html += `<div><strong>Tipo Personalizado:</strong> ${escapeHtml(e.customTypeName)}</div>`;
@@ -2519,26 +2316,13 @@
         input.value = v.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 
-    function maskKmPerLiter(input) {
-        let v = input.value.replace(/[^0-9,]/g, '');
-        const firstComma = v.indexOf(',');
-        if (firstComma !== -1) {
-            v = v.slice(0, firstComma + 1) + v.slice(firstComma + 1).replace(/,/g, '');
-        }
-        const parts = v.split(',');
-        if (parts[1] && parts[1].length > 2) parts[1] = parts[1].slice(0, 2);
-        input.value = parts.join(',');
-    }
-
     const TYPE_NAMES = {
         abastecimento: 'Abastecimento',
         oleo: 'Óleo',
         manutencao: 'Manutenção',
         revisao: 'Revisão',
-        abastecimento_oleo: 'Abastecimento + Óleo',
         balde_oleo: 'Balde de Óleo',
         troca_oleo_filtro: 'Troca Óleo e Filtro',
-        troca_pneu: 'Troca de Pneu',
         outro: 'Outro'
     };
 
@@ -2553,10 +2337,8 @@
             oleo: 'badge-oil',
             manutencao: 'badge-maintenance',
             revisao: 'badge-revision',
-            abastecimento_oleo: 'badge-fuel',
             balde_oleo: 'badge-oil',
             troca_oleo_filtro: 'badge-oil',
-            troca_pneu: 'badge-maintenance',
             outro: 'badge-other'
         };
         return badges[type] || 'badge-other';
