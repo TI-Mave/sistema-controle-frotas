@@ -1,8 +1,19 @@
-[
-  {
-    "origin": ["https://controle-frota-mave.web.app", "http://localhost:5000"],
-    "method": ["GET", "POST", "PUT", "DELETE", "HEAD"],
-    "maxAgeSeconds": 3600,
-    "responseHeader": ["Content-Type", "Authorization", "Content-Length", "X-Requested-With"]
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ATENCAO: regras abertas — qualquer pessoa com a URL do projeto pode
+    // ler e escrever. Adequado apenas enquanto o app nao tem autenticacao.
+    // Antes de tornar o site publico, restrinja por auth (request.auth != null)
+    // ou por um token compartilhado.
+    match /vehicles/{docId} {
+      allow read, write: if true;
+    }
+    match /expenses/{docId} {
+      allow read, write: if true;
+    }
+    match /km_readings/{docId} {
+      allow read, write: if true;
+    }
   }
-]
+}

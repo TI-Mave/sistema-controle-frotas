@@ -935,7 +935,6 @@
                                 <option value="revisao">Revisão</option>
                                 <option value="balde_oleo">Balde de Óleo</option>
                                 <option value="troca_oleo_filtro">Troca de Óleo e Filtro</option>
-                                <option value="troca_pneu">Troca de Pneu</option>
                                 <option value="outro">Outro (personalizado)</option>
                             </select>
                         </div>
@@ -1019,7 +1018,6 @@
                     <option value="revisao">Revisão</option>
                     <option value="balde_oleo">Balde de Óleo</option>
                     <option value="troca_oleo_filtro">Troca Óleo e Filtro</option>
-                    <option value="troca_pneu">Troca de Pneu</option>
                     <option value="outro">Outro</option>
                 </select>
             </div>
@@ -1773,7 +1771,7 @@
         const fuelExpenses = expenses.filter(e => e.type === 'abastecimento');
         const maintenanceExpenses = expenses.filter(e => !['abastecimento'].includes(e.type));
         const totalFuel = fuelExpenses.reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
-        const totalMaint = expenses.filter(e => ['manutencao', 'revisao', 'troca_oleo_filtro', 'oleo', 'balde_oleo', 'troca_pneu', 'outro'].includes(e.type)).reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
+        const totalMaint = expenses.filter(e => ['manutencao', 'revisao', 'troca_oleo_filtro', 'oleo', 'balde_oleo', 'outro'].includes(e.type)).reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
         const totalAll = expenses.reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
 
         document.getElementById('statVehicles').textContent = totalVehicles;
@@ -2325,7 +2323,6 @@
         revisao: 'Revisão',
         balde_oleo: 'Balde de Óleo',
         troca_oleo_filtro: 'Troca Óleo e Filtro',
-        troca_pneu: 'Troca de Pneu',
         outro: 'Outro'
     };
 
@@ -2342,7 +2339,6 @@
             revisao: 'badge-revision',
             balde_oleo: 'badge-oil',
             troca_oleo_filtro: 'badge-oil',
-            troca_pneu: 'badge-maintenance',
             outro: 'badge-other'
         };
         return badges[type] || 'badge-other';

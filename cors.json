@@ -1,5 +1,8 @@
-{
-  "projects": {
-    "default": "controle-frota-mave"
+[
+  {
+    "origin": ["https://controle-frota-mave.web.app", "http://localhost:5000"],
+    "method": ["GET", "POST", "PUT", "DELETE", "HEAD"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type", "Authorization", "Content-Length", "X-Requested-With"]
   }
-}
+]
