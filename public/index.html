@@ -10,25 +10,41 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --primary: #E65100;
-            --primary-light: #FF6D00;
-            --primary-lighter: #FF9100;
-            --primary-lightest: #FFF3E0;
-            --primary-dark: #BF360C;
-            --accent: #FF6D00;
-            --bg: #FFF8F0;
+            /* Slate / neutral base */
+            --primary: #0F172A;            /* slate-900 — header, primary buttons, key text */
+            --primary-light: #1E293B;      /* slate-800 */
+            --primary-lighter: #334155;    /* slate-700 */
+            --primary-lightest: #F1F5F9;   /* slate-100 — subtle surfaces */
+            --primary-dark: #020617;       /* slate-950 */
+
+            /* Orange retained as ACCENT only — used sparingly for highlights */
+            --accent: #F97316;             /* orange-500 */
+            --accent-light: #FB923C;       /* orange-400 */
+            --accent-lightest: #FFF7ED;    /* orange-50 — subtle accent surface */
+
+            /* Surfaces */
+            --bg: #F8FAFC;                 /* slate-50 */
             --bg-card: #FFFFFF;
-            --text: #3E2723;
-            --text-light: #795548;
-            --text-muted: #A1887F;
-            --border: #FFCCBC;
-            --border-light: #FFE0B2;
-            --success: #2E7D32;
-            --danger: #C62828;
-            --shadow: 0 2px 12px rgba(230, 81, 0, 0.08);
-            --shadow-hover: 0 4px 20px rgba(230, 81, 0, 0.15);
-            --radius: 12px;
-            --radius-sm: 8px;
+
+            /* Text */
+            --text: #0F172A;
+            --text-light: #475569;         /* slate-600 */
+            --text-muted: #94A3B8;         /* slate-400 */
+
+            /* Borders */
+            --border: #E2E8F0;             /* slate-200 */
+            --border-light: #F1F5F9;       /* slate-100 */
+
+            /* Status */
+            --success: #16A34A;            /* green-600 */
+            --danger: #DC2626;             /* red-600 */
+
+            /* Shadows kept subtle */
+            --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+            --shadow-hover: 0 2px 4px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.08);
+
+            --radius: 10px;
+            --radius-sm: 6px;
         }
 
         body {
@@ -40,13 +56,14 @@
 
         /* ===== HEADER ===== */
         header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            background: var(--primary);
             color: white;
             padding: 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 20px rgba(230, 81, 0, 0.3);
+            box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 1px 3px rgba(0,0,0,0.1);
+            border-bottom: 2px solid var(--accent);
         }
 
         .header-top {
@@ -57,23 +74,27 @@
         }
 
         .header-top h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.15rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 10px;
+            letter-spacing: -0.01em;
         }
 
         .header-top h1 .material-icons-outlined {
-            font-size: 28px;
+            font-size: 22px;
+            color: var(--accent);
         }
 
         .header-stats {
             display: flex;
-            gap: 20px;
-            font-size: 0.85rem;
-            opacity: 0.9;
+            gap: 18px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
         }
+
+        .header-stats strong { color: white; font-weight: 600; }
 
         .header-stats span {
             display: flex;
@@ -91,14 +112,14 @@
         nav button {
             background: transparent;
             border: none;
-            color: rgba(255,255,255,0.7);
-            padding: 12px 20px;
+            color: rgba(255,255,255,0.55);
+            padding: 10px 16px;
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+            transition: color 0.15s, border-color 0.15s;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -106,19 +127,18 @@
 
         nav button:hover {
             color: white;
-            background: rgba(255,255,255,0.1);
         }
 
         nav button.active {
             color: white;
-            border-bottom-color: white;
+            border-bottom-color: var(--accent);
         }
 
         /* ===== MAIN CONTENT ===== */
         main {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 24px 24px 48px;
         }
 
         .page { display: none; }
@@ -129,24 +149,29 @@
             background: var(--bg-card);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            border: 1px solid var(--border-light);
-            padding: 24px;
-            margin-bottom: 20px;
-            transition: box-shadow 0.2s;
+            border: 1px solid var(--border);
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            transition: box-shadow 0.15s;
         }
 
-        .card:hover {
-            box-shadow: var(--shadow-hover);
-        }
+        .card:hover { box-shadow: var(--shadow-hover); }
 
         .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .card-title .material-icons-outlined {
+            color: var(--accent);
+            font-size: 18px;
         }
 
         /* ===== FORMS ===== */
@@ -166,24 +191,23 @@
         }
 
         .form-group label {
-            font-size: 0.8rem;
+            font-size: 0.72rem;
             font-weight: 600;
             color: var(--text-light);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            letter-spacing: 0.02em;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
-            padding: 10px 14px;
-            border: 2px solid var(--border-light);
+            padding: 8px 12px;
+            border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.15s, box-shadow 0.15s;
             background: white;
         }
 
@@ -191,13 +215,13 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: var(--primary-lighter);
-            box-shadow: 0 0 0 3px rgba(255, 145, 0, 0.15);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
         }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 70px;
+            min-height: 64px;
         }
 
         .form-group input::placeholder,
@@ -210,63 +234,64 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 10px 20px;
-            border: none;
+            padding: 8px 14px;
+            border: 1px solid transparent;
             border-radius: var(--radius-sm);
             font-family: inherit;
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.85rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            background: var(--primary);
             color: white;
         }
 
-        .btn-primary:hover {
-            box-shadow: 0 4px 15px rgba(230, 81, 0, 0.4);
-            transform: translateY(-1px);
-        }
+        .btn-primary:hover { background: var(--primary-light); }
 
         .btn-secondary {
-            background: var(--primary-lightest);
-            color: var(--primary);
+            background: white;
+            color: var(--text-light);
+            border-color: var(--border);
         }
 
         .btn-secondary:hover {
-            background: var(--border);
+            border-color: var(--text-muted);
+            color: var(--text);
         }
 
         .btn-danger {
-            background: #FFEBEE;
+            background: white;
             color: var(--danger);
+            border-color: var(--border);
         }
 
         .btn-danger:hover {
-            background: #FFCDD2;
+            background: #FEF2F2;
+            border-color: var(--danger);
         }
 
         .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.8rem;
+            padding: 4px 10px;
+            font-size: 0.75rem;
         }
 
         .btn-icon {
-            width: 36px;
-            height: 36px;
+            width: 30px;
+            height: 30px;
             padding: 0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
+            border-radius: 6px;
         }
 
         .form-actions {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 8px;
+            margin-top: 16px;
             justify-content: flex-end;
         }
 
@@ -282,42 +307,43 @@
         }
 
         thead th {
-            background: var(--primary-lightest);
-            color: var(--primary);
-            font-size: 0.8rem;
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 12px 14px;
+            letter-spacing: 0.06em;
+            padding: 9px 12px;
             text-align: left;
-            border-bottom: 2px solid var(--border);
+            border-bottom: 1px solid var(--border);
             white-space: nowrap;
         }
 
         tbody td {
-            padding: 12px 14px;
+            padding: 10px 12px;
             border-bottom: 1px solid var(--border-light);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             vertical-align: middle;
+            color: var(--text);
         }
 
-        tbody tr:hover {
-            background: var(--primary-lightest);
-        }
+        tbody tr:hover { background: var(--bg); }
 
         .badge {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
             font-weight: 600;
+            letter-spacing: 0.02em;
+            border: 1px solid transparent;
         }
 
-        .badge-fuel { background: #FFF3E0; color: #E65100; }
-        .badge-oil { background: #FBE9E7; color: #BF360C; }
-        .badge-maintenance { background: #EFEBE9; color: #4E342E; }
-        .badge-revision { background: #FFF8E1; color: #F57F17; }
-        .badge-other { background: #F3E5F5; color: #6A1B9A; }
+        .badge-fuel        { background: #FEF3C7; color: #92400E; border-color: #FDE68A; }
+        .badge-oil         { background: #FEE2E2; color: #991B1B; border-color: #FECACA; }
+        .badge-maintenance { background: #E0E7FF; color: #3730A3; border-color: #C7D2FE; }
+        .badge-revision    { background: #DBEAFE; color: #1E40AF; border-color: #BFDBFE; }
+        .badge-other       { background: #F1F5F9; color: #475569; border-color: #E2E8F0; }
 
         .actions-cell {
             display: flex;
@@ -363,88 +389,103 @@
 
         .toolbar .search-box input {
             width: 100%;
-            padding: 10px 14px 10px 40px;
-            border: 2px solid var(--border-light);
+            padding: 8px 12px 8px 36px;
+            border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text);
             background: white;
         }
 
         .toolbar .search-box input:focus {
             outline: none;
-            border-color: var(--primary-lighter);
-            box-shadow: 0 0 0 3px rgba(255, 145, 0, 0.15);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
         }
 
         .toolbar .search-box .material-icons-outlined {
             position: absolute;
-            left: 12px;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .toolbar select {
-            padding: 10px 14px;
-            border: 2px solid var(--border-light);
+            padding: 8px 12px;
+            border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text);
             background: white;
             cursor: pointer;
         }
 
+        .toolbar select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
         /* ===== DASHBOARD ===== */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .stat-card {
             background: var(--bg-card);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-light);
-            padding: 20px;
+            border: 1px solid var(--border);
+            padding: 14px 16px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
+            transition: border-color 0.15s;
         }
 
+        .stat-card:hover { border-color: var(--text-muted); }
+
         .stat-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: var(--radius);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            background: var(--primary-lightest);
         }
 
-        .stat-icon .material-icons-outlined { font-size: 26px; color: white; }
+        .stat-icon .material-icons-outlined { font-size: 20px; color: var(--text-light); }
 
-        .stat-icon.orange { background: linear-gradient(135deg, #E65100, #FF6D00); }
-        .stat-icon.amber { background: linear-gradient(135deg, #FF8F00, #FFB300); }
-        .stat-icon.deep-orange { background: linear-gradient(135deg, #BF360C, #E64A19); }
-        .stat-icon.brown { background: linear-gradient(135deg, #4E342E, #795548); }
+        /* legacy color modifiers — kept for compatibility, all neutralized */
+        .stat-icon.orange,
+        .stat-icon.amber,
+        .stat-icon.deep-orange,
+        .stat-icon.brown { background: var(--primary-lightest); }
+        .stat-icon.amber .material-icons-outlined { color: var(--accent); }
 
+        .stat-info { min-width: 0; }
         .stat-info h3 {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 700;
             color: var(--text);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
         }
 
         .stat-info p {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.06em;
+            margin-top: 2px;
+            font-weight: 500;
         }
 
         /* ===== MODAL ===== */
@@ -452,11 +493,12 @@
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(62, 39, 35, 0.5);
+            background: rgba(15, 23, 42, 0.5);
             z-index: 200;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            backdrop-filter: blur(4px);
         }
 
         .modal-overlay.active {
@@ -482,12 +524,14 @@
         }
 
         .modal-header h2 {
-            font-size: 1.2rem;
-            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
             display: flex;
             align-items: center;
             gap: 8px;
         }
+        .modal-header h2 .material-icons-outlined { color: var(--accent); font-size: 18px; }
 
         .modal-body { padding: 24px; }
         .modal-footer {
@@ -510,9 +554,9 @@
         }
 
         .file-upload-area:hover {
-            border-color: var(--primary-lighter);
-            background: var(--primary-lightest);
-            color: var(--primary);
+            border-color: var(--accent);
+            background: var(--accent-lightest);
+            color: var(--accent);
         }
 
         .file-upload-area .material-icons-outlined {
@@ -634,6 +678,202 @@
             justify-content: center;
         }
 
+        /* ===== CHECKBOX LIST (pill-style) ===== */
+        .checkbox-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .checkbox-list label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: 2px solid var(--border-light);
+            border-radius: 20px;
+            cursor: pointer;
+            background: white;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .checkbox-list label:hover {
+            border-color: var(--text-muted);
+            background: var(--bg);
+        }
+
+        .checkbox-list label.checked {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+
+        .checkbox-list input[type="checkbox"] {
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .checkbox-list-empty {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .checkbox-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+        }
+
+        .checkbox-actions button {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .checkbox-actions button:hover {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* ===== RANKING (Pódio) ===== */
+        .ranking-row td { font-weight: 500; }
+        .ranking-row.gold {
+            background: #FFFBEB;
+            border-left: 3px solid #F59E0B;
+            font-weight: 600;
+        }
+        .ranking-row.silver {
+            background: #F8FAFC;
+            border-left: 3px solid #94A3B8;
+            font-weight: 600;
+        }
+        .ranking-row.bronze {
+            background: #FEF3C7;
+            border-left: 3px solid #D97706;
+            font-weight: 600;
+        }
+        .ranking-position {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            width: 60px;
+        }
+        .ranking-medal { font-size: 1.4rem; }
+        .ranking-kml {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ===== ALERT (Warning) ===== */
+        .alert-warning {
+            background: white;
+            border: 1px solid #FCD34D;
+            border-left: 4px solid #F59E0B;
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .alert-warning .alert-icon {
+            color: #D97706;
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .alert-warning .alert-content { flex: 1; min-width: 0; }
+        .alert-warning .alert-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+        .alert-warning .alert-text {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        .alert-warning ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .alert-warning ul li {
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 7px 10px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .alert-warning ul li strong { color: var(--text); }
+        .alert-warning .alert-kml {
+            font-weight: 600;
+            color: #D97706;
+            background: #FEF3C7;
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ===== TABS ===== */
+        .tab-nav {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid var(--border-light);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-nav button {
+            background: transparent;
+            border: none;
+            padding: 10px 18px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-nav button:hover { color: var(--text); }
+
+        .tab-nav button.active {
+            color: var(--text);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+
         /* ===== VEHICLE DETAIL ===== */
         .vehicle-detail-header {
             display: flex;
@@ -711,16 +951,20 @@
 
         .km-display {
             font-weight: 600;
-            color: var(--primary);
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
         }
 
         .plate-display {
-            font-family: monospace;
-            font-weight: 700;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-weight: 600;
             background: var(--primary-lightest);
+            color: var(--text-light);
             padding: 2px 8px;
             border-radius: 4px;
-            letter-spacing: 1px;
+            letter-spacing: 0.05em;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
         }
     </style>
 </head>
@@ -739,11 +983,7 @@
             </div>
         </div>
         <nav>
-            <button class="active" onclick="showPage('dashboard')">
-                <span class="material-icons-outlined" style="font-size:18px">dashboard</span>
-                <span class="nav-text">Painel</span>
-            </button>
-            <button onclick="showPage('vehicles')">
+            <button class="active" onclick="showPage('vehicles')">
                 <span class="material-icons-outlined" style="font-size:18px">directions_car</span>
                 <span class="nav-text">Veículos</span>
             </button>
@@ -764,76 +1004,11 @@
     <!-- MAIN CONTENT -->
     <main>
 
-        <!-- ============ DASHBOARD ============ -->
-        <div class="page active" id="page-dashboard">
-            <div class="dashboard-grid">
-                <div class="stat-card">
-                    <div class="stat-icon orange">
-                        <span class="material-icons-outlined">directions_car</span>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="statVehicles">0</h3>
-                        <p>Veículos Cadastrados</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon amber">
-                        <span class="material-icons-outlined">local_gas_station</span>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="statFuel">R$ 0,00</h3>
-                        <p>Total Abastecimentos</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon deep-orange">
-                        <span class="material-icons-outlined">build</span>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="statMaintenance">R$ 0,00</h3>
-                        <p>Total Manutenções</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon brown">
-                        <span class="material-icons-outlined">account_balance_wallet</span>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="statTotal">R$ 0,00</h3>
-                        <p>Gasto Total</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    <span class="material-icons-outlined">history</span>
-                    Últimos Gastos Registrados
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Veículo</th>
-                                <th>Tipo</th>
-                                <th>Valor</th>
-                                <th>Observação</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recentExpensesBody"></tbody>
-                    </table>
-                    <div class="empty-state" id="emptyDashboard">
-                        <span class="material-icons-outlined">inbox</span>
-                        <p>Nenhum gasto registrado ainda</p>
-                        <small>Comece cadastrando veículos e registrando gastos</small>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Alerta global de consumo (visível em qualquer aba quando há veículos suspeitos) -->
+        <div id="consumptionAlert"></div>
 
         <!-- ============ VEHICLES ============ -->
-        <div class="page" id="page-vehicles">
+        <div class="page active" id="page-vehicles">
             <div class="card">
                 <div class="card-title">
                     <span class="material-icons-outlined">add_circle</span>
@@ -935,6 +1110,7 @@
                                 <option value="revisao">Revisão</option>
                                 <option value="balde_oleo">Balde de Óleo</option>
                                 <option value="troca_oleo_filtro">Troca de Óleo e Filtro</option>
+                                <option value="troca_pneu">Troca de Pneu</option>
                                 <option value="outro">Outro (personalizado)</option>
                             </select>
                         </div>
@@ -957,7 +1133,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Litros <small style="font-weight:400;text-transform:none;color:var(--text-muted)">(calculado automaticamente)</small></label>
-                                <input type="text" id="fuelLiters" placeholder="--" readonly style="background:#FFF3E0; font-weight:700; color:var(--primary); cursor:default;">
+                                <input type="text" id="fuelLiters" placeholder="--" readonly style="background:var(--bg); font-weight:600; color:var(--text); cursor:default;">
                             </div>
                             <div class="form-group">
                                 <label>Combustível</label>
@@ -968,6 +1144,11 @@
                                     <option value="diesel">Diesel</option>
                                     <option value="gnv">GNV</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label>KM/Litro <span style="color:var(--danger)">*</span></label>
+                                <input type="text" id="fuelKmPerLiter" placeholder="Ex: 10,5" inputmode="decimal" oninput="maskKmPerLiter(this)">
+                                <small id="fuelKmPerLiterHelper" style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;display:block;min-height:1em;">&nbsp;</small>
                             </div>
                         </div>
                     </div>
@@ -1018,11 +1199,19 @@
                     <option value="revisao">Revisão</option>
                     <option value="balde_oleo">Balde de Óleo</option>
                     <option value="troca_oleo_filtro">Troca Óleo e Filtro</option>
+                    <option value="troca_pneu">Troca de Pneu</option>
                     <option value="outro">Outro</option>
+                </select>
+                <select id="filterLimit" onchange="renderExpenses()" title="Quantos registros mostrar">
+                    <option value="20" selected>Últimos 20</option>
+                    <option value="50">Últimos 50</option>
+                    <option value="100">Últimos 100</option>
+                    <option value="all">Todos</option>
                 </select>
             </div>
 
             <div class="card" style="padding: 0; overflow: hidden;">
+                <div id="expensesCountInfo" style="font-size:0.8rem;color:var(--text-muted);padding:10px 14px;background:var(--primary-lightest);border-bottom:1px solid var(--border-light);display:none;"></div>
                 <div class="table-container">
                     <table>
                         <thead>
@@ -1049,43 +1238,111 @@
 
         <!-- ============ REPORTS ============ -->
         <div class="page" id="page-reports">
+            <div style="margin: 0 0 16px; display: flex; align-items: center; gap: 12px;">
+                <div style="flex: 1; height: 1px; background: var(--border);"></div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px;">Relatórios</span>
+                <div style="flex: 1; height: 1px; background: var(--border);"></div>
+            </div>
+            <!-- Relatório de Gastos (unificado: por veículo / por tipo) -->
             <div class="card">
                 <div class="card-title">
-                    <span class="material-icons-outlined">bar_chart</span>
-                    Relatório por Veículo
+                    <span class="material-icons-outlined">analytics</span>
+                    Relatório de Gastos
                 </div>
-                <div class="form-grid" style="margin-bottom: 20px;">
-                    <div class="form-group">
-                        <label>Veículo</label>
-                        <select id="reportVehicle" onchange="generateReport()">
-                            <option value="">Todos os veículos</option>
-                        </select>
-                    </div>
+
+                <!-- Filtro de período (compartilhado entre as abas) -->
+                <div class="form-grid" style="margin-bottom: 16px;">
                     <div class="form-group">
                         <label>Período - Início</label>
-                        <input type="date" id="reportDateStart" onchange="generateReport()">
+                        <input type="date" id="reportPeriodStart" onchange="renderUnifiedReports()">
                     </div>
                     <div class="form-group">
                         <label>Período - Fim</label>
-                        <input type="date" id="reportDateEnd" onchange="generateReport()">
+                        <input type="date" id="reportPeriodEnd" onchange="renderUnifiedReports()">
                     </div>
                 </div>
 
-                <div id="reportContent">
-                    <div class="dashboard-grid" id="reportStats"></div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Tipo</th>
-                                    <th>Quantidade</th>
-                                    <th>Total (R$)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="reportBody"></tbody>
-                        </table>
+                <!-- Abas -->
+                <div class="tab-nav">
+                    <button id="tabBtnVehicle" class="active" onclick="switchReportTab('vehicle')">
+                        <span class="material-icons-outlined" style="font-size:18px">directions_car</span>
+                        Por Veículo
+                    </button>
+                    <button id="tabBtnType" onclick="switchReportTab('type')">
+                        <span class="material-icons-outlined" style="font-size:18px">category</span>
+                        Por Tipo
+                    </button>
+                </div>
+
+                <!-- Aba: Por Veículo -->
+                <div class="tab-pane active" id="tabPaneVehicle">
+                    <div class="checkbox-actions">
+                        <button type="button" onclick="toggleAllCheckboxes('vehicleCheckboxList', true)">Selecionar todos</button>
+                        <button type="button" onclick="toggleAllCheckboxes('vehicleCheckboxList', false)">Limpar</button>
+                    </div>
+                    <div class="checkbox-list" id="vehicleCheckboxList"></div>
+                    <div id="vehicleCheckboxReport"></div>
+                </div>
+
+                <!-- Aba: Por Tipo -->
+                <div class="tab-pane" id="tabPaneType">
+                    <div class="checkbox-actions">
+                        <button type="button" onclick="toggleAllCheckboxes('typeCheckboxList', true)">Selecionar todos</button>
+                        <button type="button" onclick="toggleAllCheckboxes('typeCheckboxList', false)">Limpar</button>
+                    </div>
+                    <div class="checkbox-list" id="typeCheckboxList"></div>
+                    <div id="typeCheckboxReport"></div>
+                </div>
+            </div>
+
+            <!-- Ranking de Consumo (km/L) -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="material-icons-outlined">emoji_events</span>
+                    Ranking de Consumo (km/L)
+                </div>
+                <div class="form-grid" style="margin-bottom: 16px;">
+                    <div class="form-group">
+                        <label>Período - Início (Mês/Ano)</label>
+                        <input type="month" id="rankingStart" onchange="renderRankingReport()">
+                    </div>
+                    <div class="form-group">
+                        <label>Período - Fim (Mês/Ano)</label>
+                        <input type="month" id="rankingEnd" onchange="renderRankingReport()">
                     </div>
                 </div>
+                <div id="rankingContent"></div>
+            </div>
+
+            <!-- Relatório de Quilometragem -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="material-icons-outlined">route</span>
+                    Relatório de Quilometragem
+                </div>
+                <div class="checkbox-actions">
+                    <button type="button" onclick="toggleAllCheckboxes('kmReportCheckboxList', true)">Selecionar todos</button>
+                    <button type="button" onclick="toggleAllCheckboxes('kmReportCheckboxList', false)">Limpar</button>
+                </div>
+                <div class="checkbox-list" id="kmReportCheckboxList"></div>
+                <div class="form-grid" style="margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label>Período - Início (Mês/Ano)</label>
+                        <input type="month" id="kmReportStart" onchange="renderMileageReport()">
+                    </div>
+                    <div class="form-group">
+                        <label>Período - Fim (Mês/Ano)</label>
+                        <input type="month" id="kmReportEnd" onchange="renderMileageReport()">
+                    </div>
+                </div>
+                <div id="kmReportContent"></div>
+            </div>
+
+            <!-- Separador visual: Cadastro -->
+            <div style="margin: 32px 0 16px; display: flex; align-items: center; gap: 12px;">
+                <div style="flex: 1; height: 1px; background: var(--border);"></div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px;">Cadastro</span>
+                <div style="flex: 1; height: 1px; background: var(--border);"></div>
             </div>
 
             <!-- Registro de Quilometragem Mensal -->
@@ -1094,9 +1351,6 @@
                     <span class="material-icons-outlined">edit_note</span>
                     Registro de Quilometragem Mensal
                 </div>
-                <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 16px;">
-                    Registre a quilometragem de cada veículo no último dia de cada mês para acompanhar o deslocamento mensal.
-                </p>
                 <div class="form-grid" style="margin-bottom: 16px;">
                     <div class="form-group">
                         <label>Veículo</label>
@@ -1119,32 +1373,15 @@
                         Salvar Leitura
                     </button>
                 </div>
-                <div id="kmReadingsTableContainer"></div>
-            </div>
 
-            <!-- Relatório de Quilometragem -->
-            <div class="card">
-                <div class="card-title">
-                    <span class="material-icons-outlined">route</span>
-                    Relatório de Quilometragem
+                <!-- Filtro da lista de leituras -->
+                <div class="toolbar" style="margin-bottom: 12px;">
+                    <select id="kmReadingsFilter" onchange="renderKmReadings()" style="flex:1;">
+                        <option value="">Todos os veículos</option>
+                    </select>
                 </div>
-                <div class="form-grid" style="margin-bottom: 20px;">
-                    <div class="form-group">
-                        <label>Veículo</label>
-                        <select id="kmReportVehicle" onchange="renderMileageReport()">
-                            <option value="">Todos os veículos</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Período - Início (Mês/Ano)</label>
-                        <input type="month" id="kmReportStart" onchange="renderMileageReport()">
-                    </div>
-                    <div class="form-group">
-                        <label>Período - Fim (Mês/Ano)</label>
-                        <input type="month" id="kmReportEnd" onchange="renderMileageReport()">
-                    </div>
-                </div>
-                <div id="kmReportContent"></div>
+
+                <div id="kmReadingsTableContainer"></div>
             </div>
         </div>
 
@@ -1433,6 +1670,17 @@
             return;
         }
 
+        // Validação KM/Litro obrigatório para "Abastecimento"
+        let kmPerLiter = 0;
+        if (type === 'abastecimento') {
+            kmPerLiter = parseFloat(document.getElementById('fuelKmPerLiter').value.replace(',', '.'));
+            if (!Number.isFinite(kmPerLiter) || kmPerLiter <= 0) {
+                showToast('Informe o consumo (KM/Litro) para gastos de abastecimento.', 'error');
+                document.getElementById('fuelKmPerLiter').focus();
+                return;
+            }
+        }
+
         const expense = {
             vehicleId: vehicleId,
             type: type,
@@ -1448,6 +1696,7 @@
             expense.fuelLiters = parseFloat(document.getElementById('fuelLiters').value.replace(',', '.')) || '';
             expense.fuelPricePerLiter = parseMoney(document.getElementById('fuelPricePerLiter').value);
             expense.fuelType = document.getElementById('fuelType').value;
+            expense.fuelKmPerLiter = kmPerLiter;
         }
 
         // Upload de arquivos
@@ -1523,6 +1772,11 @@
             document.getElementById('fuelLiters').value = ex.fuelLiters ? parseFloat(ex.fuelLiters).toFixed(2).replace('.', ',') : '';
             document.getElementById('fuelPricePerLiter').value = ex.fuelPricePerLiter ? formatMoney(ex.fuelPricePerLiter) : '';
             document.getElementById('fuelType').value = ex.fuelType || '';
+            const kmPerLiterEl = document.getElementById('fuelKmPerLiter');
+            kmPerLiterEl.value = ex.fuelKmPerLiter
+                ? parseFloat(ex.fuelKmPerLiter).toFixed(2).replace('.', ',').replace(/,?0+$/, '')
+                : '';
+            maskKmPerLiter(kmPerLiterEl);
         }
 
         document.getElementById('expenseFormTitle').textContent = 'Editar Gasto';
@@ -1553,6 +1807,11 @@
         document.getElementById('fuelFields').style.display = 'none';
         document.getElementById('filePreview').innerHTML = '';
         document.getElementById('expenseKmHelper').innerHTML = '&nbsp;';
+        const kmPerLiterHelper = document.getElementById('fuelKmPerLiterHelper');
+        if (kmPerLiterHelper) {
+            kmPerLiterHelper.innerHTML = '&nbsp;';
+            kmPerLiterHelper.style.color = '';
+        }
         pendingFiles = [];
         setDefaultDate();
     }
@@ -1655,9 +1914,28 @@
         renderExpenses();
         renderDashboard();
         populateVehicleSelects();
-        generateReport();
         renderKmReadings();
         renderMileageReport();
+        renderUnifiedReports();
+        renderRankingReport();
+    }
+
+    // Re-renderiza ambas as abas do relatório unificado (chamado quando o filtro de período muda).
+    function renderUnifiedReports() {
+        renderVehicleCheckboxReport();
+        renderTypeCheckboxReport();
+    }
+
+    function switchReportTab(tab) {
+        ['tabBtnVehicle', 'tabBtnType'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+        ['tabPaneVehicle', 'tabPaneType'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+        if (tab === 'vehicle') {
+            document.getElementById('tabBtnVehicle').classList.add('active');
+            document.getElementById('tabPaneVehicle').classList.add('active');
+        } else {
+            document.getElementById('tabBtnType').classList.add('active');
+            document.getElementById('tabPaneType').classList.add('active');
+        }
     }
 
     function renderVehicles() {
@@ -1715,6 +1993,7 @@
         const search = document.getElementById('searchExpense').value.toLowerCase();
         const filterV = document.getElementById('filterVehicle').value;
         const filterT = document.getElementById('filterType').value;
+        const limitRaw = document.getElementById('filterLimit')?.value || '20';
 
         let filtered = expenses;
         if (search) {
@@ -1727,13 +2006,29 @@
         if (filterV) filtered = filtered.filter(e => e.vehicleId === filterV);
         if (filterT) filtered = filtered.filter(e => e.type === filterT);
 
+        const totalAfterFilters = filtered.length;
+        const limit = limitRaw === 'all' ? Infinity : parseInt(limitRaw, 10);
+        if (Number.isFinite(limit)) filtered = filtered.slice(0, limit);
+
         const tbody = document.getElementById('expensesBody');
         const empty = document.getElementById('emptyExpenses');
+        const countInfo = document.getElementById('expensesCountInfo');
 
         if (filtered.length === 0) {
             tbody.innerHTML = '';
             empty.style.display = 'block';
+            if (countInfo) countInfo.style.display = 'none';
             return;
+        }
+
+        if (countInfo) {
+            if (filtered.length < totalAfterFilters) {
+                countInfo.style.display = 'block';
+                countInfo.textContent = `Mostrando ${filtered.length} de ${totalAfterFilters} registros — use "Todos" no filtro para ver tudo.`;
+            } else {
+                countInfo.style.display = 'block';
+                countInfo.textContent = `${totalAfterFilters} registro${totalAfterFilters === 1 ? '' : 's'}`;
+            }
         }
 
         empty.style.display = 'none';
@@ -1766,45 +2061,9 @@
     }
 
     function renderDashboard() {
-        // Stats
-        const totalVehicles = vehicles.length;
-        const fuelExpenses = expenses.filter(e => e.type === 'abastecimento');
-        const maintenanceExpenses = expenses.filter(e => !['abastecimento'].includes(e.type));
-        const totalFuel = fuelExpenses.reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
-        const totalMaint = expenses.filter(e => ['manutencao', 'revisao', 'troca_oleo_filtro', 'oleo', 'balde_oleo', 'outro'].includes(e.type)).reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
-        const totalAll = expenses.reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
-
-        document.getElementById('statVehicles').textContent = totalVehicles;
-        document.getElementById('statFuel').textContent = 'R$ ' + formatMoney(totalFuel);
-        document.getElementById('statMaintenance').textContent = 'R$ ' + formatMoney(totalMaint);
-        document.getElementById('statTotal').textContent = 'R$ ' + formatMoney(totalAll);
-        document.getElementById('totalVehicles').textContent = totalVehicles;
+        renderConsumptionAlerts();
+        document.getElementById('totalVehicles').textContent = vehicles.length;
         document.getElementById('totalExpenses').textContent = expenses.length;
-
-        // Recent expenses
-        const recent = expenses.slice(0, 10);
-        const tbody = document.getElementById('recentExpensesBody');
-        const empty = document.getElementById('emptyDashboard');
-
-        if (recent.length === 0) {
-            tbody.innerHTML = '';
-            empty.style.display = 'block';
-            return;
-        }
-
-        empty.style.display = 'none';
-        tbody.innerHTML = recent.map(e => {
-            const v = vehicles.find(v => v.id === e.vehicleId);
-            return `
-                <tr>
-                    <td>${formatDate(e.date)}</td>
-                    <td>${v ? escapeHtml(v.name) : '-'}</td>
-                    <td><span class="badge ${getTypeBadge(e.type)}">${getTypeName(e)}</span></td>
-                    <td><strong>R$ ${formatMoney(e.value)}</strong></td>
-                    <td><span class="obs-text">${escapeHtml(e.obs || '-')}</span></td>
-                </tr>
-            `;
-        }).join('');
     }
 
     function populateVehicleSelects() {
@@ -1812,41 +2071,112 @@
 
         document.getElementById('expenseVehicle').innerHTML = '<option value="">Selecione o veículo</option>' + options;
         document.getElementById('filterVehicle').innerHTML = '<option value="">Todos os veículos</option>' + options;
-        document.getElementById('reportVehicle').innerHTML = '<option value="">Todos os veículos</option>' + options;
         document.getElementById('kmReadingVehicle').innerHTML = '<option value="">Selecione o veículo</option>' + options;
-        document.getElementById('kmReportVehicle').innerHTML = '<option value="">Todos os veículos</option>' + options;
+        const kmReadingsFilter = document.getElementById('kmReadingsFilter');
+        if (kmReadingsFilter) {
+            const prev = kmReadingsFilter.value;
+            kmReadingsFilter.innerHTML = '<option value="">Todos os veículos</option>' + options;
+            kmReadingsFilter.value = prev;
+        }
+
+        populateCheckboxLists();
+    }
+
+    // Popula as listas de checkbox dos novos relatórios e do relatório de quilometragem.
+    // Preserva seleções já marcadas quando a lista é re-renderizada.
+    function populateCheckboxLists() {
+        renderVehicleCheckboxes('vehicleCheckboxList', () => renderVehicleCheckboxReport());
+        renderVehicleCheckboxes('kmReportCheckboxList', () => renderMileageReport());
+        renderTypeCheckboxes('typeCheckboxList', () => renderTypeCheckboxReport());
+    }
+
+    function renderVehicleCheckboxes(containerId, onChange) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const previouslyChecked = new Set(
+            Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(c => c.value)
+        );
+
+        if (vehicles.length === 0) {
+            container.innerHTML = '<span class="checkbox-list-empty">Nenhum veículo cadastrado.</span>';
+            return;
+        }
+
+        container.innerHTML = vehicles.map(v => {
+            const checked = previouslyChecked.has(v.id) ? 'checked' : '';
+            const labelClass = checked ? 'checked' : '';
+            return `<label class="${labelClass}">
+                <input type="checkbox" value="${v.id}" ${checked}>
+                ${escapeHtml(v.name)} <span style="opacity:0.7">${escapeHtml(v.plate)}</span>
+            </label>`;
+        }).join('');
+
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', () => {
+                cb.closest('label').classList.toggle('checked', cb.checked);
+                onChange();
+            });
+        });
+    }
+
+    function renderTypeCheckboxes(containerId, onChange) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const previouslyChecked = new Set(
+            Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(c => c.value)
+        );
+
+        const entries = Object.entries(TYPE_NAMES);
+        container.innerHTML = entries.map(([key, name]) => {
+            const checked = previouslyChecked.has(key) ? 'checked' : '';
+            const labelClass = checked ? 'checked' : '';
+            return `<label class="${labelClass}">
+                <input type="checkbox" value="${key}" ${checked}>
+                ${escapeHtml(name)}
+            </label>`;
+        }).join('');
+
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', () => {
+                cb.closest('label').classList.toggle('checked', cb.checked);
+                onChange();
+            });
+        });
+    }
+
+    function getCheckedValues(containerId) {
+        return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`)).map(c => c.value);
+    }
+
+    function toggleAllCheckboxes(containerId, checked) {
+        const boxes = document.querySelectorAll(`#${containerId} input[type="checkbox"]`);
+        boxes.forEach(cb => {
+            cb.checked = checked;
+            cb.closest('label').classList.toggle('checked', checked);
+        });
+        // Dispara o handler associado uma única vez
+        if (containerId === 'vehicleCheckboxList') renderVehicleCheckboxReport();
+        else if (containerId === 'typeCheckboxList') renderTypeCheckboxReport();
+        else if (containerId === 'kmReportCheckboxList') renderMileageReport();
     }
 
     // ================================================================
     //  REPORTS
     // ================================================================
-    function generateReport() {
-        const vehicleId = document.getElementById('reportVehicle').value;
-        const dateStart = document.getElementById('reportDateStart').value;
-        const dateEnd = document.getElementById('reportDateEnd').value;
 
-        let filtered = [...expenses];
-        if (vehicleId) filtered = filtered.filter(e => e.vehicleId === vehicleId);
-        if (dateStart) filtered = filtered.filter(e => e.date >= dateStart);
-        if (dateEnd) filtered = filtered.filter(e => e.date <= dateEnd);
-
-        const types = {};
-        filtered.forEach(e => {
-            const typeName = getTypeName(e);
-            if (!types[typeName]) types[typeName] = { count: 0, total: 0 };
-            types[typeName].count++;
-            types[typeName].total += parseFloat(e.value) || 0;
-        });
+    // Renderiza um bloco com cards de totais e tabela de gastos para um conjunto filtrado.
+    function renderFilteredExpensesBlock(filtered, scope) {
+        if (filtered.length === 0) {
+            return '<div class="empty-state"><span class="material-icons-outlined">inbox</span><p>Nenhum gasto encontrado</p></div>';
+        }
 
         const grandTotal = filtered.reduce((s, e) => s + (parseFloat(e.value) || 0), 0);
 
-        // KM rodado: per veículo (max - min) das KMs registradas no período, somado entre veículos
-        const vehicleIdsInScope = vehicleId
-            ? [vehicleId]
-            : [...new Set(filtered.map(e => e.vehicleId))];
+        // KM rodado: per veículo (max - min) das KMs registradas, somado entre veículos
+        const vehicleIds = [...new Set(filtered.map(e => e.vehicleId))];
         let totalKmDriven = 0;
         let kmComputable = false;
-        vehicleIdsInScope.forEach(vId => {
+        vehicleIds.forEach(vId => {
             const kms = filtered
                 .filter(e => e.vehicleId === vId)
                 .map(e => Number(e.km) || 0)
@@ -1856,55 +2186,232 @@
                 kmComputable = true;
             }
         });
-        const kmLabel = vehicleId ? 'KM Rodado no Período' : 'Distância Total da Frota';
-        const kmValue = kmComputable
-            ? totalKmDriven.toLocaleString('pt-BR') + ' km'
-            : '—';
+        const kmValue = kmComputable ? totalKmDriven.toLocaleString('pt-BR') + ' km' : '—';
+        const kmLabel = scope === 'vehicle' ? 'KM Rodado' : 'Distância da Frota';
 
-        // Stats cards
-        document.getElementById('reportStats').innerHTML = `
-            <div class="stat-card">
-                <div class="stat-icon orange"><span class="material-icons-outlined">receipt_long</span></div>
-                <div class="stat-info">
-                    <h3>${filtered.length}</h3>
-                    <p>Total de Registros</p>
+        const stats = `
+            <div class="dashboard-grid" style="margin-bottom: 16px;">
+                <div class="stat-card">
+                    <div class="stat-icon orange"><span class="material-icons-outlined">receipt_long</span></div>
+                    <div class="stat-info"><h3>${filtered.length}</h3><p>Total de Registros</p></div>
                 </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon amber"><span class="material-icons-outlined">account_balance_wallet</span></div>
-                <div class="stat-info">
-                    <h3>R$ ${formatMoney(grandTotal)}</h3>
-                    <p>Valor Total</p>
+                <div class="stat-card">
+                    <div class="stat-icon amber"><span class="material-icons-outlined">account_balance_wallet</span></div>
+                    <div class="stat-info"><h3>R$ ${formatMoney(grandTotal)}</h3><p>Valor Total</p></div>
                 </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon deep-orange"><span class="material-icons-outlined">route</span></div>
-                <div class="stat-info">
-                    <h3>${kmValue}</h3>
-                    <p>${kmLabel}</p>
+                <div class="stat-card">
+                    <div class="stat-icon deep-orange"><span class="material-icons-outlined">route</span></div>
+                    <div class="stat-info"><h3>${kmValue}</h3><p>${kmLabel}</p></div>
                 </div>
             </div>
         `;
 
-        // Table
-        const tbody = document.getElementById('reportBody');
-        if (Object.keys(types).length === 0) {
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:20px;">Nenhum dado encontrado para o filtro selecionado</td></tr>';
+        const sorted = [...filtered].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+        const rows = sorted.map(e => {
+            const v = vehicles.find(v => v.id === e.vehicleId);
+            return `<tr>
+                <td>${formatDate(e.date)}</td>
+                <td>${v ? escapeHtml(v.name) + ' - ' + escapeHtml(v.plate) : '<em>Removido</em>'}</td>
+                <td><span class="badge ${getTypeBadge(e.type)}">${getTypeName(e)}</span></td>
+                <td><strong>R$ ${formatMoney(e.value)}</strong></td>
+                <td>${e.km ? Number(e.km).toLocaleString('pt-BR') : '-'}</td>
+                <td><span class="obs-text" title="${escapeHtml(e.obs || '')}">${escapeHtml(e.obs || '-')}</span></td>
+            </tr>`;
+        }).join('');
+
+        return stats + `
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Veículo</th>
+                            <th>Tipo</th>
+                            <th>Valor</th>
+                            <th>KM</th>
+                            <th>Observação</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    // Filtra os gastos pelas datas do filtro de período compartilhado do card unificado.
+    function applyReportPeriodFilter(items) {
+        const startDate = document.getElementById('reportPeriodStart')?.value || '';
+        const endDate = document.getElementById('reportPeriodEnd')?.value || '';
+        let out = items;
+        if (startDate) out = out.filter(e => e.date >= startDate);
+        if (endDate) out = out.filter(e => e.date <= endDate);
+        return out;
+    }
+
+    function renderVehicleCheckboxReport() {
+        const container = document.getElementById('vehicleCheckboxReport');
+        if (!container) return;
+        const checkedIds = getCheckedValues('vehicleCheckboxList');
+        if (checkedIds.length === 0) {
+            container.innerHTML = '<div class="empty-state" style="padding:24px;"><span class="material-icons-outlined">touch_app</span><p>Selecione um ou mais veículos acima</p></div>';
+            return;
+        }
+        const filtered = applyReportPeriodFilter(expenses.filter(e => checkedIds.includes(e.vehicleId)));
+        container.innerHTML = renderFilteredExpensesBlock(filtered, 'vehicle');
+    }
+
+    function renderTypeCheckboxReport() {
+        const container = document.getElementById('typeCheckboxReport');
+        if (!container) return;
+        const checkedTypes = getCheckedValues('typeCheckboxList');
+        if (checkedTypes.length === 0) {
+            container.innerHTML = '<div class="empty-state" style="padding:24px;"><span class="material-icons-outlined">touch_app</span><p>Selecione um ou mais tipos de gasto acima</p></div>';
+            return;
+        }
+        const filtered = applyReportPeriodFilter(expenses.filter(e => checkedTypes.includes(e.type)));
+        container.innerHTML = renderFilteredExpensesBlock(filtered, 'type');
+    }
+
+    // Calcula consumo (km/L) de um veículo no período. Retorna null se não houver dados suficientes.
+    // KM rodado = max(leitura ou KM de gasto) - min(...) no período.
+    // Litros = soma dos abastecimentos com fuelLiters > 0 no período.
+    function computeVehicleConsumption(vehicleId, startYM, endYM) {
+        // Define limites de data: usa todo o histórico se nenhum for informado.
+        const startDate = startYM ? `${startYM}-01` : '0000-01-01';
+        let endDate = '9999-12-31';
+        if (endYM) {
+            const [eY, eM] = endYM.split('-');
+            const lastDay = new Date(parseInt(eY), parseInt(eM), 0).getDate();
+            endDate = `${eY}-${eM}-${String(lastDay).padStart(2, '0')}`;
+        }
+
+        // KM no período: combina leituras mensais + KMs registrados em gastos.
+        const readingsKms = kmReadings
+            .filter(r => r.vehicleId === vehicleId)
+            .filter(r => (!startYM || r.yearMonth >= startYM) && (!endYM || r.yearMonth <= endYM))
+            .map(r => Number(r.km) || 0)
+            .filter(k => k > 0);
+
+        const expenseKms = expenses
+            .filter(e => e.vehicleId === vehicleId && e.km && e.date >= startDate && e.date <= endDate)
+            .map(e => Number(e.km) || 0)
+            .filter(k => k > 0);
+
+        const allKms = [...readingsKms, ...expenseKms];
+        if (allKms.length < 2) return null;
+
+        const kmDriven = Math.max(...allKms) - Math.min(...allKms);
+        if (kmDriven <= 0) return null;
+
+        // Litros no período: soma de abastecimentos com fuelLiters > 0.
+        const fuelExps = expenses.filter(e =>
+            e.vehicleId === vehicleId &&
+            e.type === 'abastecimento' &&
+            e.date >= startDate && e.date <= endDate &&
+            e.fuelLiters && parseFloat(e.fuelLiters) > 0
+        );
+        const totalLiters = fuelExps.reduce((s, e) => s + (parseFloat(e.fuelLiters) || 0), 0);
+        if (totalLiters <= 0) return null;
+
+        return {
+            kmDriven,
+            totalLiters,
+            kmPerLiter: kmDriven / totalLiters
+        };
+    }
+
+    // Mostra alerta no dashboard para veículos com consumo > 15 km/L (provável erro de dados).
+    function renderConsumptionAlerts() {
+        const container = document.getElementById('consumptionAlert');
+        if (!container) return;
+
+        const suspicious = vehicles
+            .map(v => ({ vehicle: v, stats: computeVehicleConsumption(v.id, '', '') }))
+            .filter(r => r.stats !== null && r.stats.kmPerLiter > 15)
+            .sort((a, b) => b.stats.kmPerLiter - a.stats.kmPerLiter);
+
+        if (suspicious.length === 0) {
+            container.innerHTML = '';
             return;
         }
 
-        tbody.innerHTML = Object.entries(types).map(([name, data]) => `
-            <tr>
-                <td><strong>${escapeHtml(name)}</strong></td>
-                <td>${data.count}</td>
-                <td><strong>R$ ${formatMoney(data.total)}</strong></td>
-            </tr>
-        `).join('') + `
-            <tr style="background: var(--primary-lightest); font-weight: 700;">
-                <td>TOTAL</td>
-                <td>${filtered.length}</td>
-                <td>R$ ${formatMoney(grandTotal)}</td>
-            </tr>
+        const items = suspicious.map(r => `
+            <li>
+                <span><strong>${escapeHtml(r.vehicle.name)}</strong> <span style="opacity:0.7">${escapeHtml(r.vehicle.plate)}</span></span>
+                <span class="alert-kml">${r.stats.kmPerLiter.toFixed(2).replace('.', ',')} km/L</span>
+            </li>
+        `).join('');
+
+        const plural = suspicious.length > 1;
+        container.innerHTML = `
+            <div class="alert-warning">
+                <span class="material-icons-outlined alert-icon">warning</span>
+                <div class="alert-content">
+                    <div class="alert-title">${plural ? 'Verifique o consumo destes veículos' : 'Verifique o consumo deste veículo'}</div>
+                    <div class="alert-text">Consumo acima de 15 km/L costuma indicar erro nos dados (KM ou litros incorretos). Revise os registros ${plural ? 'dos veículos' : 'do veículo'} abaixo:</div>
+                    <ul>${items}</ul>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderRankingReport() {
+        const container = document.getElementById('rankingContent');
+        if (!container) return;
+        const startYM = document.getElementById('rankingStart').value;
+        const endYM = document.getElementById('rankingEnd').value;
+
+        if (vehicles.length === 0) {
+            container.innerHTML = '<div class="empty-state"><span class="material-icons-outlined">emoji_events</span><p>Nenhum veículo cadastrado</p></div>';
+            return;
+        }
+
+        const ranked = vehicles
+            .map(v => ({ vehicle: v, stats: computeVehicleConsumption(v.id, startYM, endYM) }))
+            .filter(r => r.stats !== null)
+            .sort((a, b) => b.stats.kmPerLiter - a.stats.kmPerLiter);
+
+        if (ranked.length === 0) {
+            container.innerHTML = '<div class="empty-state"><span class="material-icons-outlined">info</span><p>Sem dados suficientes para gerar o ranking</p><small>É preciso pelo menos 2 leituras de KM (ou KMs em gastos) e ao menos 1 abastecimento com litros informados, no período.</small></div>';
+            return;
+        }
+
+        const medals = ['🥇', '🥈', '🥉'];
+        const classes = ['gold', 'silver', 'bronze'];
+
+        const rows = ranked.map((r, i) => {
+            const pos = i + 1;
+            const medal = medals[i] || '';
+            const cls = classes[i] || '';
+            const positionCell = medal
+                ? `<span class="ranking-medal">${medal}</span> <span style="opacity:0.7">#${pos}</span>`
+                : `#${pos}`;
+            return `<tr class="ranking-row ${cls}">
+                <td class="ranking-position">${positionCell}</td>
+                <td><strong>${escapeHtml(r.vehicle.name)}</strong></td>
+                <td><span class="plate-display">${escapeHtml(r.vehicle.plate)}</span></td>
+                <td>${r.stats.kmDriven.toLocaleString('pt-BR')} km</td>
+                <td>${r.stats.totalLiters.toFixed(2).replace('.', ',')} L</td>
+                <td class="ranking-kml">${r.stats.kmPerLiter.toFixed(2).replace('.', ',')} km/L</td>
+            </tr>`;
+        }).join('');
+
+        container.innerHTML = `
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                            <th>Veículo</th>
+                            <th>Placa</th>
+                            <th>KM Rodado</th>
+                            <th>Litros</th>
+                            <th>Consumo</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
         `;
     }
 
@@ -1987,13 +2494,21 @@
 
     function renderKmReadings() {
         const container = document.getElementById('kmReadingsTableContainer');
+        const filterVehicleId = document.getElementById('kmReadingsFilter')?.value || '';
 
         if (kmReadings.length === 0) {
             container.innerHTML = '<div class="empty-state"><span class="material-icons-outlined">edit_note</span><p>Nenhuma leitura registrada</p><small>Registre a quilometragem mensal dos veículos acima</small></div>';
             return;
         }
 
-        const sorted = [...kmReadings].sort((a, b) => {
+        const filtered = filterVehicleId ? kmReadings.filter(r => r.vehicleId === filterVehicleId) : kmReadings;
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty-state"><span class="material-icons-outlined">filter_alt_off</span><p>Nenhuma leitura para o veículo selecionado</p></div>';
+            return;
+        }
+
+        const sorted = [...filtered].sort((a, b) => {
             if (b.yearMonth !== a.yearMonth) return b.yearMonth.localeCompare(a.yearMonth);
             const vA = vehicles.find(v => v.id === a.vehicleId);
             const vB = vehicles.find(v => v.id === b.vehicleId);
@@ -2041,11 +2556,16 @@
 
     function renderMileageReport() {
         const container = document.getElementById('kmReportContent');
-        const vehicleId = document.getElementById('kmReportVehicle').value;
+        const checkedIds = getCheckedValues('kmReportCheckboxList');
         const startYM = document.getElementById('kmReportStart').value;
         const endYM = document.getElementById('kmReportEnd').value;
 
-        const targetVehicles = vehicleId ? vehicles.filter(v => v.id === vehicleId) : vehicles;
+        if (checkedIds.length === 0) {
+            container.innerHTML = '<div class="empty-state" style="padding:24px;"><span class="material-icons-outlined">touch_app</span><p>Selecione um ou mais veículos acima</p></div>';
+            return;
+        }
+
+        const targetVehicles = vehicles.filter(v => checkedIds.includes(v.id));
 
         if (targetVehicles.length === 0) {
             container.innerHTML = '<div class="empty-state"><span class="material-icons-outlined">route</span><p>Nenhum veículo cadastrado</p></div>';
@@ -2147,7 +2667,7 @@
                     </td>
                 </tr>
                 ${monthRows}
-                <tr style="background: #FFF3E0; font-weight: 600;">
+                <tr style="background: var(--accent-lightest); font-weight: 600;">
                     <td>TOTAL</td>
                     <td></td>
                     <td>${totalKmDriven > 0 ? totalKmDriven.toLocaleString('pt-BR') + ' km' : '-'}</td>
@@ -2200,6 +2720,7 @@
         if (e.fuelLiters) html += `<div><strong>Litros:</strong> ${e.fuelLiters}</div>`;
         if (e.fuelPricePerLiter) html += `<div><strong>Preço/Litro:</strong> R$ ${formatMoney(e.fuelPricePerLiter)}</div>`;
         if (e.fuelType) html += `<div><strong>Combustível:</strong> ${e.fuelType}</div>`;
+        if (e.fuelKmPerLiter) html += `<div><strong>Consumo:</strong> ${parseFloat(e.fuelKmPerLiter).toFixed(2).replace('.', ',')} km/L</div>`;
         if (e.maintenanceDesc) html += `<div><strong>Serviço:</strong> ${escapeHtml(e.maintenanceDesc)}</div>`;
         if (e.maintenanceProvider) html += `<div><strong>Oficina:</strong> ${escapeHtml(e.maintenanceProvider)}</div>`;
         if (e.customTypeName) html += `<div><strong>Tipo Personalizado:</strong> ${escapeHtml(e.customTypeName)}</div>`;
@@ -2316,6 +2837,27 @@
         input.value = v.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 
+    // Aceita apenas dígitos e uma vírgula. Mostra warning se > 15 km/L (não bloqueia).
+    function maskKmPerLiter(input) {
+        let v = input.value.replace(/[^\d,]/g, '');
+        const firstComma = v.indexOf(',');
+        if (firstComma >= 0) {
+            v = v.slice(0, firstComma + 1) + v.slice(firstComma + 1).replace(/,/g, '');
+        }
+        input.value = v;
+
+        const helper = document.getElementById('fuelKmPerLiterHelper');
+        if (!helper) return;
+        const num = parseFloat(v.replace(',', '.'));
+        if (Number.isFinite(num) && num > 15) {
+            helper.textContent = '⚠ Acima de 15 km/L — verifique se o valor está correto';
+            helper.style.color = '#D97706';
+        } else {
+            helper.innerHTML = '&nbsp;';
+            helper.style.color = '';
+        }
+    }
+
     const TYPE_NAMES = {
         abastecimento: 'Abastecimento',
         oleo: 'Óleo',
@@ -2323,6 +2865,7 @@
         revisao: 'Revisão',
         balde_oleo: 'Balde de Óleo',
         troca_oleo_filtro: 'Troca Óleo e Filtro',
+        troca_pneu: 'Troca de Pneu',
         outro: 'Outro'
     };
 
@@ -2339,6 +2882,7 @@
             revisao: 'badge-revision',
             balde_oleo: 'badge-oil',
             troca_oleo_filtro: 'badge-oil',
+            troca_pneu: 'badge-maintenance',
             outro: 'badge-other'
         };
         return badges[type] || 'badge-other';
