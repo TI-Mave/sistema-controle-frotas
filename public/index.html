@@ -874,6 +874,95 @@
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
 
+        /* ===== REPORT SECTIONS (sidebar + panes) ===== */
+        .report-section { display: none; }
+        .report-section.active { display: block; }
+
+        .report-sidebar {
+            position: fixed;
+            top: 120px;
+            left: max(16px, calc((100vw - 1200px) / 2 - 216px));
+            width: 200px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+            z-index: 50;
+        }
+
+        .report-sidebar-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 6px 10px 10px;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 6px;
+        }
+
+        .report-sidebar button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text-light);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .report-sidebar button .material-icons-outlined {
+            font-size: 18px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .report-sidebar button:hover {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .report-sidebar button:hover .material-icons-outlined { color: var(--text-light); }
+
+        .report-sidebar button.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .report-sidebar button.active .material-icons-outlined { color: var(--accent); }
+
+        /* Fallback horizontal: visível só quando o sidebar não cabe na margem */
+        .report-submenu-horizontal { display: none; }
+
+        @media (max-width: 1632px) {
+            .report-sidebar { display: none; }
+            .report-submenu-horizontal {
+                display: flex;
+                margin-bottom: 20px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+            .report-submenu-horizontal button {
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+        }
+
         /* ===== VEHICLE DETAIL ===== */
         .vehicle-detail-header {
             display: flex;
@@ -1238,150 +1327,188 @@
 
         <!-- ============ REPORTS ============ -->
         <div class="page" id="page-reports">
-            <div style="margin: 0 0 16px; display: flex; align-items: center; gap: 12px;">
-                <div style="flex: 1; height: 1px; background: var(--border);"></div>
-                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px;">Relatórios</span>
-                <div style="flex: 1; height: 1px; background: var(--border);"></div>
-            </div>
-            <!-- Relatório de Gastos (unificado: por veículo / por tipo) -->
-            <div class="card">
-                <div class="card-title">
+
+            <!-- Sidebar vertical (visível em telas largas, na margem esquerda) -->
+            <aside class="report-sidebar">
+                <div class="report-sidebar-title">Relatórios</div>
+                <button class="report-section-btn active" data-section="expenses" onclick="switchReportSection('expenses')">
                     <span class="material-icons-outlined">analytics</span>
                     Relatório de Gastos
-                </div>
-
-                <!-- Filtro de período (compartilhado entre as abas) -->
-                <div class="form-grid" style="margin-bottom: 16px;">
-                    <div class="form-group">
-                        <label>Período - Início</label>
-                        <input type="date" id="reportPeriodStart" onchange="renderUnifiedReports()">
-                    </div>
-                    <div class="form-group">
-                        <label>Período - Fim</label>
-                        <input type="date" id="reportPeriodEnd" onchange="renderUnifiedReports()">
-                    </div>
-                </div>
-
-                <!-- Abas -->
-                <div class="tab-nav">
-                    <button id="tabBtnVehicle" class="active" onclick="switchReportTab('vehicle')">
-                        <span class="material-icons-outlined" style="font-size:18px">directions_car</span>
-                        Por Veículo
-                    </button>
-                    <button id="tabBtnType" onclick="switchReportTab('type')">
-                        <span class="material-icons-outlined" style="font-size:18px">category</span>
-                        Por Tipo
-                    </button>
-                </div>
-
-                <!-- Aba: Por Veículo -->
-                <div class="tab-pane active" id="tabPaneVehicle">
-                    <div class="checkbox-actions">
-                        <button type="button" onclick="toggleAllCheckboxes('vehicleCheckboxList', true)">Selecionar todos</button>
-                        <button type="button" onclick="toggleAllCheckboxes('vehicleCheckboxList', false)">Limpar</button>
-                    </div>
-                    <div class="checkbox-list" id="vehicleCheckboxList"></div>
-                    <div id="vehicleCheckboxReport"></div>
-                </div>
-
-                <!-- Aba: Por Tipo -->
-                <div class="tab-pane" id="tabPaneType">
-                    <div class="checkbox-actions">
-                        <button type="button" onclick="toggleAllCheckboxes('typeCheckboxList', true)">Selecionar todos</button>
-                        <button type="button" onclick="toggleAllCheckboxes('typeCheckboxList', false)">Limpar</button>
-                    </div>
-                    <div class="checkbox-list" id="typeCheckboxList"></div>
-                    <div id="typeCheckboxReport"></div>
-                </div>
-            </div>
-
-            <!-- Ranking de Consumo (km/L) -->
-            <div class="card">
-                <div class="card-title">
+                </button>
+                <button class="report-section-btn" data-section="ranking" onclick="switchReportSection('ranking')">
                     <span class="material-icons-outlined">emoji_events</span>
-                    Ranking de Consumo (km/L)
-                </div>
-                <div class="form-grid" style="margin-bottom: 16px;">
-                    <div class="form-group">
-                        <label>Período - Início (Mês/Ano)</label>
-                        <input type="month" id="rankingStart" onchange="renderRankingReport()">
-                    </div>
-                    <div class="form-group">
-                        <label>Período - Fim (Mês/Ano)</label>
-                        <input type="month" id="rankingEnd" onchange="renderRankingReport()">
-                    </div>
-                </div>
-                <div id="rankingContent"></div>
-            </div>
-
-            <!-- Relatório de Quilometragem -->
-            <div class="card">
-                <div class="card-title">
+                    Ranking de Consumo
+                </button>
+                <button class="report-section-btn" data-section="mileage" onclick="switchReportSection('mileage')">
                     <span class="material-icons-outlined">route</span>
                     Relatório de Quilometragem
-                </div>
-                <div class="checkbox-actions">
-                    <button type="button" onclick="toggleAllCheckboxes('kmReportCheckboxList', true)">Selecionar todos</button>
-                    <button type="button" onclick="toggleAllCheckboxes('kmReportCheckboxList', false)">Limpar</button>
-                </div>
-                <div class="checkbox-list" id="kmReportCheckboxList"></div>
-                <div class="form-grid" style="margin-bottom: 20px;">
-                    <div class="form-group">
-                        <label>Período - Início (Mês/Ano)</label>
-                        <input type="month" id="kmReportStart" onchange="renderMileageReport()">
-                    </div>
-                    <div class="form-group">
-                        <label>Período - Fim (Mês/Ano)</label>
-                        <input type="month" id="kmReportEnd" onchange="renderMileageReport()">
-                    </div>
-                </div>
-                <div id="kmReportContent"></div>
-            </div>
-
-            <!-- Separador visual: Cadastro -->
-            <div style="margin: 32px 0 16px; display: flex; align-items: center; gap: 12px;">
-                <div style="flex: 1; height: 1px; background: var(--border);"></div>
-                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px;">Cadastro</span>
-                <div style="flex: 1; height: 1px; background: var(--border);"></div>
-            </div>
-
-            <!-- Registro de Quilometragem Mensal -->
-            <div class="card">
-                <div class="card-title">
+                </button>
+                <button class="report-section-btn" data-section="kmreading" onclick="switchReportSection('kmreading')">
                     <span class="material-icons-outlined">edit_note</span>
-                    Registro de Quilometragem Mensal
+                    Registro Mensal de KM
+                </button>
+            </aside>
+
+            <!-- Submenu horizontal (fallback para telas onde o sidebar não cabe) -->
+            <div class="tab-nav report-submenu-horizontal">
+                <button class="report-section-btn active" data-section="expenses" onclick="switchReportSection('expenses')">
+                    <span class="material-icons-outlined" style="font-size:18px">analytics</span>
+                    Relatório de Gastos
+                </button>
+                <button class="report-section-btn" data-section="ranking" onclick="switchReportSection('ranking')">
+                    <span class="material-icons-outlined" style="font-size:18px">emoji_events</span>
+                    Ranking de Consumo
+                </button>
+                <button class="report-section-btn" data-section="mileage" onclick="switchReportSection('mileage')">
+                    <span class="material-icons-outlined" style="font-size:18px">route</span>
+                    Relatório de Quilometragem
+                </button>
+                <button class="report-section-btn" data-section="kmreading" onclick="switchReportSection('kmreading')">
+                    <span class="material-icons-outlined" style="font-size:18px">edit_note</span>
+                    Registro Mensal de KM
+                </button>
+            </div>
+
+            <!-- Seção: Relatório de Gastos (unificado: por veículo / por tipo) -->
+            <div class="report-section active" data-section="expenses">
+                <div class="card">
+                    <div class="card-title">
+                        <span class="material-icons-outlined">analytics</span>
+                        Relatório de Gastos
+                    </div>
+
+                    <!-- Filtro de período (compartilhado entre as abas) -->
+                    <div class="form-grid" style="margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label>Período - Início</label>
+                            <input type="date" id="reportPeriodStart" onchange="renderUnifiedReports()">
+                        </div>
+                        <div class="form-group">
+                            <label>Período - Fim</label>
+                            <input type="date" id="reportPeriodEnd" onchange="renderUnifiedReports()">
+                        </div>
+                    </div>
+
+                    <!-- Abas -->
+                    <div class="tab-nav">
+                        <button id="tabBtnVehicle" class="active" onclick="switchReportTab('vehicle')">
+                            <span class="material-icons-outlined" style="font-size:18px">directions_car</span>
+                            Por Veículo
+                        </button>
+                        <button id="tabBtnType" onclick="switchReportTab('type')">
+                            <span class="material-icons-outlined" style="font-size:18px">category</span>
+                            Por Tipo
+                        </button>
+                    </div>
+
+                    <!-- Aba: Por Veículo -->
+                    <div class="tab-pane active" id="tabPaneVehicle">
+                        <div class="checkbox-actions">
+                            <button type="button" onclick="toggleAllCheckboxes('vehicleCheckboxList', true)">Selecionar todos</button>
+                            <button type="button" onclick="toggleAllCheckboxes('vehicleCheckboxList', false)">Limpar</button>
+                        </div>
+                        <div class="checkbox-list" id="vehicleCheckboxList"></div>
+                        <div id="vehicleCheckboxReport"></div>
+                    </div>
+
+                    <!-- Aba: Por Tipo -->
+                    <div class="tab-pane" id="tabPaneType">
+                        <div class="checkbox-actions">
+                            <button type="button" onclick="toggleAllCheckboxes('typeCheckboxList', true)">Selecionar todos</button>
+                            <button type="button" onclick="toggleAllCheckboxes('typeCheckboxList', false)">Limpar</button>
+                        </div>
+                        <div class="checkbox-list" id="typeCheckboxList"></div>
+                        <div id="typeCheckboxReport"></div>
+                    </div>
                 </div>
-                <div class="form-grid" style="margin-bottom: 16px;">
-                    <div class="form-group">
-                        <label>Veículo</label>
-                        <select id="kmReadingVehicle">
-                            <option value="">Selecione o veículo</option>
+            </div>
+
+            <!-- Seção: Ranking de Consumo (km/L) -->
+            <div class="report-section" data-section="ranking">
+                <div class="card">
+                    <div class="card-title">
+                        <span class="material-icons-outlined">emoji_events</span>
+                        Ranking de Consumo (km/L)
+                    </div>
+                    <div class="form-grid" style="margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label>Período - Início (Mês/Ano)</label>
+                            <input type="month" id="rankingStart" onchange="renderRankingReport()">
+                        </div>
+                        <div class="form-group">
+                            <label>Período - Fim (Mês/Ano)</label>
+                            <input type="month" id="rankingEnd" onchange="renderRankingReport()">
+                        </div>
+                    </div>
+                    <div id="rankingContent"></div>
+                </div>
+            </div>
+
+            <!-- Seção: Relatório de Quilometragem -->
+            <div class="report-section" data-section="mileage">
+                <div class="card">
+                    <div class="card-title">
+                        <span class="material-icons-outlined">route</span>
+                        Relatório de Quilometragem
+                    </div>
+                    <div class="checkbox-actions">
+                        <button type="button" onclick="toggleAllCheckboxes('kmReportCheckboxList', true)">Selecionar todos</button>
+                        <button type="button" onclick="toggleAllCheckboxes('kmReportCheckboxList', false)">Limpar</button>
+                    </div>
+                    <div class="checkbox-list" id="kmReportCheckboxList"></div>
+                    <div class="form-grid" style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label>Período - Início (Mês/Ano)</label>
+                            <input type="month" id="kmReportStart" onchange="renderMileageReport()">
+                        </div>
+                        <div class="form-group">
+                            <label>Período - Fim (Mês/Ano)</label>
+                            <input type="month" id="kmReportEnd" onchange="renderMileageReport()">
+                        </div>
+                    </div>
+                    <div id="kmReportContent"></div>
+                </div>
+            </div>
+
+            <!-- Seção: Registro de Quilometragem Mensal -->
+            <div class="report-section" data-section="kmreading">
+                <div class="card">
+                    <div class="card-title">
+                        <span class="material-icons-outlined">edit_note</span>
+                        Registro de Quilometragem Mensal
+                    </div>
+                    <div class="form-grid" style="margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label>Veículo</label>
+                            <select id="kmReadingVehicle">
+                                <option value="">Selecione o veículo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mês/Ano</label>
+                            <input type="month" id="kmReadingMonth">
+                        </div>
+                        <div class="form-group">
+                            <label>Quilometragem Atual (km)</label>
+                            <input type="number" id="kmReadingValue" placeholder="Ex: 45230" min="0">
+                        </div>
+                    </div>
+                    <div class="form-actions" style="margin-top: 0; margin-bottom: 20px;">
+                        <button class="btn btn-primary" onclick="saveKmReading()">
+                            <span class="material-icons-outlined" style="font-size:18px">save</span>
+                            Salvar Leitura
+                        </button>
+                    </div>
+
+                    <!-- Filtro da lista de leituras -->
+                    <div class="toolbar" style="margin-bottom: 12px;">
+                        <select id="kmReadingsFilter" onchange="renderKmReadings()" style="flex:1;">
+                            <option value="">Todos os veículos</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Mês/Ano</label>
-                        <input type="month" id="kmReadingMonth">
-                    </div>
-                    <div class="form-group">
-                        <label>Quilometragem Atual (km)</label>
-                        <input type="number" id="kmReadingValue" placeholder="Ex: 45230" min="0">
-                    </div>
-                </div>
-                <div class="form-actions" style="margin-top: 0; margin-bottom: 20px;">
-                    <button class="btn btn-primary" onclick="saveKmReading()">
-                        <span class="material-icons-outlined" style="font-size:18px">save</span>
-                        Salvar Leitura
-                    </button>
-                </div>
 
-                <!-- Filtro da lista de leituras -->
-                <div class="toolbar" style="margin-bottom: 12px;">
-                    <select id="kmReadingsFilter" onchange="renderKmReadings()" style="flex:1;">
-                        <option value="">Todos os veículos</option>
-                    </select>
+                    <div id="kmReadingsTableContainer"></div>
                 </div>
-
-                <div id="kmReadingsTableContainer"></div>
             </div>
         </div>
 
@@ -1936,6 +2063,15 @@
             document.getElementById('tabBtnType').classList.add('active');
             document.getElementById('tabPaneType').classList.add('active');
         }
+    }
+
+    function switchReportSection(section) {
+        document.querySelectorAll('.report-section-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.section === section);
+        });
+        document.querySelectorAll('.report-section').forEach(pane => {
+            pane.classList.toggle('active', pane.dataset.section === section);
+        });
     }
 
     function renderVehicles() {
